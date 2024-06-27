@@ -13,12 +13,6 @@ const Container = styled.div`
     gap: 10px;
 `;
 
-const MainTitle = styled.div`
-    font-size: 35px;
-    font-weight: bold;
-    color: white;
-`;
-
 const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
     const [contents, setContents] = useState([]);
 
