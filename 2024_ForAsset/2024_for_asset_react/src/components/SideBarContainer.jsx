@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import TitleComponent from "./TitleComponent";
 import NewChatButton from "./NewChatButton";
@@ -20,11 +20,17 @@ const MainTitle = styled.div`
 `;
 
 const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
+    const [contents, setContents] = useState([]);
+
+    const handleNewChatClick = () => {
+        setContents([...contents, "New Report"]);
+    };
+
     return (
         <Container>
             <TitleComponent mainTitle={mainTitle}/>
-            <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor}/>
-            <SideBarListContainer/>
+            <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick}/>
+            <SideBarListContainer contents={contents}/>
         </Container>
     );
 }
