@@ -31,7 +31,7 @@ const Text = styled.p`
     color: #fff;
 `;
 
-const SidBarListComponent = ({ content }) => {
+const SideBarListComponent = ({ content }) => {
     return (
         <Container>
             <ListContainer>
@@ -43,4 +43,4 @@ const SidBarListComponent = ({ content }) => {
     );
 }
 
-export default SidBarListComponent;
+export default SideBarListComponent;
