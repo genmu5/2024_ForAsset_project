@@ -1,4 +1,4 @@
-package com.fastcampus._2024_for_asset_spring;
+package com.example._2024_for_asset_spring;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
