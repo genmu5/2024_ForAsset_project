@@ -7,7 +7,7 @@ const Container = styled.div`
     align-items: center;
     border-radius: 10px;
     width: 100%;
-    height: 50px;
+    height: 45px;
     cursor: pointer; // 마우스 커서를 포인터로 변경
     //    transition: transform 0.2s, box-shadow 0.2s;
     &:hover {

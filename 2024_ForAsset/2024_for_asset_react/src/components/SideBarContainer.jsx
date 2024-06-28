@@ -10,21 +10,32 @@ const Container = styled.div`
     height: 100%;
     border-radius: 26px;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 `;
 
 const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
     const [contents, setContents] = useState([]);
+    const [selectedIndex, setSelectedIndex] = useState(null);
 
     const handleNewChatClick = () => {
-        setContents([...contents, "New Report"]);
+        const newContents = [...contents, "New Report"];
+        setContents(newContents);
+        setSelectedIndex(newContents.length - 1);
+    };
+
+    const handleItemClick = (index) => {
+        setSelectedIndex(index);
     };
 
     return (
         <Container>
             <TitleComponent mainTitle={mainTitle}/>
             <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick}/>
-            <SideBarListContainer contents={contents}/>
+            <SideBarListContainer
+                contents={contents}
+                selectedIndex={selectedIndex}
+                onItemClick={handleItemClick}
+            />
         </Container>
     );
 }
