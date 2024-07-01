@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import SideBarContainer from "../components/SideBarContainer";
-import ChatContainer from "../PageSections/CustomerPageSection/ChatContainer";
-import InformationContainer from "../PageSections/CustomerPageSection/InformationContainer";
+import InformationContainer from "../PageSections/ManagerPageSection/InformationContainer";
 import ReportContainer from "../PageSections/ManagerPageSection/ReportContainer";
 
 const Container = styled.div`
@@ -22,12 +21,46 @@ const InnerContainer = styled.div`
 `;
 
 const ManagerPage = () => {
-    return(
+    const [question, setQuestion] = useState("");
+    const [answer, setAnswer] = useState("");
+
+    const fetchAnswer = () => {
+        if (question.trim() === "") {
+            alert("질문을 입력해주세요.");
+            return;
+        }
+
+        fetch(`http://localhost:8080/chat?message=${encodeURIComponent(question)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/plain'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                setAnswer(data);
+            })
+            .catch(error => {
+                console.error('Error fetching answer:', error);
+                setAnswer("서버에서 답변을 가져오는 중 오류가 발생했습니다.");
+            });
+    };
+
+    return (
         <Container>
             <InnerContainer>
-                <SideBarContainer mainTitle={"ForAssetManager"} ButtonBackGroundColor={"#69D2BF"}/>
-                <InformationContainer/>
-                <ReportContainer/>
+                <SideBarContainer mainTitle={"ForAssetManager"} ButtonBackGroundColor={"#69D2BF"} />
+                <InformationContainer
+                    question={question}
+                    setQuestion={setQuestion}
+                    fetchAnswer={fetchAnswer}
+                />
+                <ReportContainer answer={answer} />
             </InnerContainer>
         </Container>
     );
