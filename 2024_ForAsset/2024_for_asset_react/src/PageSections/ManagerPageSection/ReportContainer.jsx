@@ -9,6 +9,27 @@ const Container = styled.div`
     width: 100%;
     background-color: white;
     border-radius: 26px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const AnswerContainer = styled.div`
+    margin-top: 20px;
+    width: 90%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    white-space: pre-wrap; /* This preserves the formatting of the text */
+`;
+
+const AnswerTitle = styled.p`
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 20px;
 `;
 
 const ReportContainer = ({ answer }) => {
@@ -16,10 +37,10 @@ const ReportContainer = ({ answer }) => {
         <Container>
             <TitleComponent title={"Report"} />
             {answer && (
-                <div>
-                    <p>답변:</p>
+                <AnswerContainer>
+                    <AnswerTitle>운용보고 작성완료</AnswerTitle>
                     <p>{answer}</p>
-                </div>
+                </AnswerContainer>
             )}
         </Container>
     );

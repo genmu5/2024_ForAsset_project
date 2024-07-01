@@ -21,16 +21,19 @@ const InnerContainer = styled.div`
 `;
 
 const ManagerPage = () => {
-    const [question, setQuestion] = useState("");
+    const [basicInfo, setBasicInfo] = useState("");
+    const [assetStatus, setAssetStatus] = useState("");
+    const [profitStatus, setProfitStatus] = useState("");
+    const [assetComposition, setAssetComposition] = useState("");
     const [answer, setAnswer] = useState("");
 
-    const fetchAnswer = () => {
-        if (question.trim() === "") {
-            alert("질문을 입력해주세요.");
-            return;
+    const submitData = (data, fetchAnswer = false) => {
+        if (data.trim() === "") {
+            alert("입력을 완료해주세요.");
+            return Promise.reject("입력을 완료해주세요.");
         }
 
-        fetch(`http://localhost:8080/chat?message=${encodeURIComponent(question)}`, {
+        return fetch(`http://localhost:8080/chat?message=${encodeURIComponent(data)}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'text/plain'
@@ -43,11 +46,9 @@ const ManagerPage = () => {
                 return response.text();
             })
             .then(data => {
-                setAnswer(data);
-            })
-            .catch(error => {
-                console.error('Error fetching answer:', error);
-                setAnswer("서버에서 답변을 가져오는 중 오류가 발생했습니다.");
+                if (fetchAnswer) {
+                    setAnswer(data);
+                }
             });
     };
 
@@ -56,9 +57,15 @@ const ManagerPage = () => {
             <InnerContainer>
                 <SideBarContainer mainTitle={"ForAssetManager"} ButtonBackGroundColor={"#69D2BF"} />
                 <InformationContainer
-                    question={question}
-                    setQuestion={setQuestion}
-                    fetchAnswer={fetchAnswer}
+                    basicInfo={basicInfo}
+                    setBasicInfo={setBasicInfo}
+                    assetStatus={assetStatus}
+                    setAssetStatus={setAssetStatus}
+                    profitStatus={profitStatus}
+                    setProfitStatus={setProfitStatus}
+                    assetComposition={assetComposition}
+                    setAssetComposition={setAssetComposition}
+                    submitData={submitData}
                 />
                 <ReportContainer answer={answer} />
             </InnerContainer>
