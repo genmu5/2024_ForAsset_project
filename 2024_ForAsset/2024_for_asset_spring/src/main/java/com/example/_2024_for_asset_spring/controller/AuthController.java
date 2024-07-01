@@ -5,6 +5,7 @@ import com.example._2024_for_asset_spring.dto.LoginRequestDto;
 import com.example._2024_for_asset_spring.dto.MemberRequestDto;
 import com.example._2024_for_asset_spring.dto.MemberResponseDto;
 import com.example._2024_for_asset_spring.service.AuthService;
+import com.example._2024_for_asset_spring.service.FundPerformanceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final FundPerformanceService fundPerformanceService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, FundPerformanceService fundPerformanceService) {
         this.authService = authService;
+        this.fundPerformanceService = fundPerformanceService;
     }
 
     @PostMapping("/signUp")
@@ -34,4 +37,5 @@ public class AuthController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("test");
     }
+
 }
