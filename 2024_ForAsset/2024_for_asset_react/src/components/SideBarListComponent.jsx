@@ -42,13 +42,13 @@ const Text = styled.p`
     color: #fff;
 `;
 
-const SideBarListComponent = ({ content, isSelected, onClick }) => {
+const SideBarListComponent = ({ content, isSelected, onClick, onRemove }) => {
     return (
         <Container>
             <ListContainer isSelected={isSelected} onClick={onClick}>
                 <Icon src={message_icon} alt={"message_icon"} />
                 <Text>{content}</Text>
-                <Icon src={trash_icon} alt={"trash_icon"} />
+                <Icon onClick={(e) => { e.stopPropagation(); onRemove(); }} src={trash_icon} alt={"trash_icon"} />
             </ListContainer>
         </Container>
     );
