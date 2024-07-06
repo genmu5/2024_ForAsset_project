@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import message_icon from "../images/message_icon.png";
+import bookmark_filled_star from "../images/bookmark_filled_star.png";
+import bookmark_empty_star from "../images/bookmark_empty_star.png";
 import trash_icon from "../images/trash_icon.png";
 
 const Container = styled.div`
@@ -24,14 +25,18 @@ const ListContainer = styled.div`
 `;
 
 const Icon = styled.img`
-    width: 20px;
-    height: 20px;
+    width: 23px;
+    height: 23px;
     filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(100%) contrast(100%);
     cursor: pointer; // 마우스 커서를 포인터로 변경
     &:hover {
-        transform: scale(1.008); // 스케일 - 마우스 커서가 닿았을 때 버튼 크기 조절
+        transform: scale(1.01); // 스케일 - 마우스 커서가 닿았을 때 버튼 크기 조절
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // 버튼 그림자
     }
+`;
+
+const TrashIcon = styled(Icon)`
+    margin-left: auto;
 `;
 
 const Text = styled.p`
@@ -42,13 +47,29 @@ const Text = styled.p`
     color: #fff;
 `;
 
+const iconStyle = {
+    color: 'red'
+};
+
 const SideBarListComponent = ({ content, isSelected, onClick, onRemove }) => {
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    const handleBookmarkClick = (e) => {
+        e.stopPropagation();
+        setIsBookmarked(!isBookmarked);
+    };
+
     return (
         <Container>
             <ListContainer isSelected={isSelected} onClick={onClick}>
-                <Icon src={message_icon} alt={"message_icon"} />
+                <Icon
+                    src={isBookmarked ? bookmark_filled_star : bookmark_empty_star}
+                    onClick={handleBookmarkClick}
+                    alt={"bookmark"}
+                    style={iconStyle}
+                />
                 <Text>{content}</Text>
-                <Icon onClick={(e) => { e.stopPropagation(); onRemove(); }} src={trash_icon} alt={"trash_icon"} />
+                <TrashIcon onClick={(e) => { e.stopPropagation(); onRemove(); }} src={trash_icon} alt={"trash_icon"} />
             </ListContainer>
         </Container>
     );

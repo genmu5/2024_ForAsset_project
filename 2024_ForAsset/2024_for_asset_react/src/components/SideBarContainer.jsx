@@ -4,6 +4,7 @@ import TitleComponent from "./TitleComponent";
 import NewChatButton from "./NewChatButton";
 import SideBarListContainer from "./SideBarListContainer";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import UserProfile from "./UserProfile";
 
 const Container = styled.div`
     display: flex;
@@ -12,6 +13,18 @@ const Container = styled.div`
     border-radius: 26px;
     flex-direction: column;
     gap: 8px;
+`;
+
+const FixedHeader = styled.div`
+    flex-shrink: 0;
+`;
+
+const ContentContainer = styled.div`
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto; /* 스크롤 가능하도록 설정 */
 `;
 
 const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
@@ -54,20 +67,27 @@ const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
 
     return (
         <Container>
-            <TitleComponent mainTitle={mainTitle}/>
+            <FixedHeader>
+                <TitleComponent mainTitle={mainTitle}/>
+            </FixedHeader>
+            <FixedHeader>
             <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick}/>
-            <SideBarListContainer
-                contents={contents}
-                selectedIndex={selectedIndex}
-                onItemClick={handleItemClick}
-                onItemRemove={handleItemRemove}
-            />
-            {showModal && (
-                <DeleteConfirmationModal
-                    onConfirm={confirmRemove}
-                    onCancel={cancelRemove}
+            </FixedHeader>
+            <ContentContainer>
+                <SideBarListContainer
+                    contents={contents}
+                    selectedIndex={selectedIndex}
+                    onItemClick={handleItemClick}
+                    onItemRemove={handleItemRemove}
                 />
-            )}
+                {showModal && (
+                    <DeleteConfirmationModal
+                        onConfirm={confirmRemove}
+                        onCancel={cancelRemove}
+                    />
+                )}
+            </ContentContainer>
+            <UserProfile />
         </Container>
     );
 }

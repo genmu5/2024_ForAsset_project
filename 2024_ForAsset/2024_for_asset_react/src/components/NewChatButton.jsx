@@ -11,7 +11,7 @@ const Container = styled.div`
     cursor: pointer; // 마우스 커서를 포인터로 변경
     //    transition: transform 0.2s, box-shadow 0.2s;
     &:hover {
-        transform: scale(1.005); // 스케일 - 마우스 커서가 닿았을 때 버튼 크기 조절
+        transform: scale(1.01); // 스케일 - 마우스 커서가 닿았을 때 버튼 크기 조절
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // 버튼 그림자
     }
 `;
