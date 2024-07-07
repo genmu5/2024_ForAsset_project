@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=waving&color=timeGradient&text=생성형AI를%20활용한%20자산운용보고서%20자동생성&animation=twinkling&fontSize=35&fontAlign=70&height=250)
+![header](https://capsule-render.vercel.app/api?type=waving&color=timeGradient&text=생성형AI를%20활용한%20자산운용보고서%20자동생성&animation=twinkling&fontSize=35&height=250)
 
 ## 프로젝트 소개
 **본 서비스(‘FAAI’)는 자산 운용 및 펀드에 관심을 가진 개인 사용자와 자산운용 보고서 작성이 필요한 자산운용사에게 도움을 주는 서비스로, 개인용과 기업용으로 기능을 두 파트로 분리**
@@ -20,4 +20,4 @@
 - React
 - AWS EC2 Server
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=footer)
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=timeGradient&height=200&section=footer)
