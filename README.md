@@ -11,6 +11,9 @@
 - [개인] 자산운용보고서 속의 어려운 용어 및 이해를 돕는 채팅 기능
 - [개인] 개인의 자산운용을 위한 실시간 인기 펀드 및 경제 소식 제공
 
+## 아키텍처
+![Alt text](Architecture.png)
+
 ## 사용 툴
 - Chat GPT 3.5 API
 - Spring Boot Framework
