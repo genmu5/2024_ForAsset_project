@@ -1,5 +1,6 @@
 package com.example._2024_for_asset_spring.entity;
 
+import com.example._2024_for_asset_spring.entity.auth.Member;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

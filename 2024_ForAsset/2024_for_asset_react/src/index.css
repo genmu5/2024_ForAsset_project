@@ -55,3 +55,18 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+@font-face {
+    font-family: "archivo";
+    src: url(./fonts/Archivo/Archivo-VariableFont_wdth,wght.ttf);
+}
+
+@font-face {
+    font-family: "noto";
+    src: url(./fonts/Noto/NotoSansKR-VariableFont_wght.ttf);
+}
+
+:root {
+    --font-archivo: "archivo";
+    --font-noto: "noto";
+}

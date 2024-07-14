@@ -1,5 +1,6 @@
 package com.example._2024_for_asset_spring.entity;
 
+import com.example._2024_for_asset_spring.entity.auth.Member;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public class ChatMessage {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "created_at")
