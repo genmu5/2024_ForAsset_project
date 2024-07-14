@@ -40,7 +40,6 @@ const MessageContent = styled.div`
     align-items: center;
     gap: 10px;
     flex-direction: ${props => props.isUser ? 'row-reverse' : 'row'};
-    line-height: 1.5;
 `;
 
 const Avatar = styled.div`
