@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import SideBarListComponent from "./SideBarListComponent";
 
@@ -8,7 +8,7 @@ const Container = styled.div`
     flex-direction: column;
 `;
 
-const SideBarListContainer = ({ contents, selectedIndex, onItemClick, onItemRemove }) => {
+const SideBarListContainer = ({ contents, selectedIndex, menuOpenIndex, onItemClick, onItemRemove, onToggleMenu }) => {
     return (
         <Container>
             {contents.map((content, index) => (
@@ -16,8 +16,10 @@ const SideBarListContainer = ({ contents, selectedIndex, onItemClick, onItemRemo
                     key={index}
                     content={content}
                     isSelected={selectedIndex === index}
+                    isMenuOpen={menuOpenIndex === index}
                     onClick={() => onItemClick(index)}
                     onRemove={() => onItemRemove(index)}
+                    onToggleMenu={() => onToggleMenu(index)}
                 />
             ))}
         </Container>

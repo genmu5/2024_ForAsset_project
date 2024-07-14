@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TitleComponent from "./TitleComponent";
 import NewChatButton from "./NewChatButton";
@@ -27,16 +27,17 @@ const ContentContainer = styled.div`
     overflow-y: auto; /* 스크롤 가능하도록 설정 */
 `;
 
-const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
+const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
     const [contents, setContents] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
+    const [menuOpenIndex, setMenuOpenIndex] = useState(null); // 현재 열린 메뉴의 인덱스
 
     const handleNewChatClick = () => {
-        const newContents = [...contents, "New Report"];
+        const newContents = ["New Report", ...contents]; // 새로운 항목을 맨 앞에 추가
         setContents(newContents);
-        setSelectedIndex(newContents.length - 1);
+        setSelectedIndex(0); // 새로 추가된 항목을 선택된 상태로 설정
     };
 
     const handleItemClick = (index) => {
@@ -65,20 +66,39 @@ const SideBarContainer = ({mainTitle, ButtonBackGroundColor}) => {
         setIndexToRemove(null);
     };
 
+    const toggleMenu = (index) => {
+        setMenuOpenIndex(index);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuOpenIndex !== null) {
+                setMenuOpenIndex(null);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [menuOpenIndex]);
+
     return (
-        <Container>
+        <Container onClick={(e) => e.stopPropagation()}>
             <FixedHeader>
-                <TitleComponent mainTitle={mainTitle}/>
+                <TitleComponent mainTitle={mainTitle} />
             </FixedHeader>
             <FixedHeader>
-            <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick}/>
+                <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick} />
             </FixedHeader>
             <ContentContainer>
                 <SideBarListContainer
                     contents={contents}
                     selectedIndex={selectedIndex}
+                    menuOpenIndex={menuOpenIndex}
                     onItemClick={handleItemClick}
                     onItemRemove={handleItemRemove}
+                    onToggleMenu={toggleMenu}
                 />
                 {showModal && (
                     <DeleteConfirmationModal
