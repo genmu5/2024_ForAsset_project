@@ -4,7 +4,6 @@ import SideBarContainer from "../components/SideBarContainer";
 import ChatContainer from "../PageSections/CustomerPageSection/ChatContainer";
 import InformationContainer from "../PageSections/CustomerPageSection/InformationContainer";
 
-
 const Container = styled.div`
     width: 100%;
     height: 100%;
@@ -22,12 +21,12 @@ const InnerContainer = styled.div`
 `;
 
 const CustomerPage = () => {
-    return(
+    return (
         <Container>
             <InnerContainer>
-                <SideBarContainer mainTitle={"ForAssetCustomer"} ButtonBackGroundColor={"#F08D86"}/>
-                <ChatContainer/>
-                <InformationContainer/>
+                <SideBarContainer mainTitle={"ForAssetCustomer"} ButtonBackGroundColor={"#F08D86"} />
+                <ChatContainer />
+                <InformationContainer />
             </InnerContainer>
         </Container>
     );
