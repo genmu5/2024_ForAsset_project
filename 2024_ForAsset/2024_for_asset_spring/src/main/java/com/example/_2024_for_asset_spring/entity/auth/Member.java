@@ -1,5 +1,6 @@
 package com.example._2024_for_asset_spring.entity.auth;
 
+import com.example._2024_for_asset_spring.dto.auth.request.SignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -56,5 +57,30 @@ public class Member {
         this.refreshToken = refreshToken;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public Member(SignUpRequestDto dto){
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();
+        this.nickName = dto.getNickName();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.role = Role.valueOf(dto.getRole());
+        this.provider = Provider.LOCAL;
+        this.providerId = null;
+        this.refreshToken = null;
+    }
+
+    //OAuth2
+    public Member(String email, String provider, String providerId){
+        this.email = email;
+        this.password = "KakaoPassword";
+        this.nickName = "KakaoNickName";
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.role = Role.USER;
+        this.provider = Provider.valueOf(provider);
+        this.providerId = providerId;
+        this.refreshToken = null;
     }
 }
