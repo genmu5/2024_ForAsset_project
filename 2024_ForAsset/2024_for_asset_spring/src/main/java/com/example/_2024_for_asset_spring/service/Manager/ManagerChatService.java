@@ -3,10 +3,15 @@ package com.example._2024_for_asset_spring.service.Manager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ManagerChatService {
@@ -40,6 +45,23 @@ public class ManagerChatService {
                 .onErrorResume(WebClientResponseException.class, e -> {
                     return Mono.just("API 호출 중 오류가 발생했습니다.");
                 });
+    }
+
+    public Mono<String> getGptResponsesForLargeText(String largeText) {
+        List<String> textParts = splitText(largeText, 1000);
+        return Flux.fromIterable(textParts)
+                .flatMap(this::getGptResponse)
+                .collectList()
+                .map(responses -> String.join(" ", responses));
+    }
+
+    private List<String> splitText(String text, int maxLength) {
+        List<String> parts = new ArrayList<>();
+        int length = text.length();
+        for (int i = 0; i < length; i += maxLength) {
+            parts.add(text.substring(i, Math.min(length, i + maxLength)));
+        }
+        return parts;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

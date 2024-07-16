@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import TitleComponent from "../../components/TitleComponent";
+import axios from "axios";
 
 const Container = styled.div`
     align-items: center;
@@ -49,6 +50,7 @@ const InformationContainer = ({
                                   assetComposition, setAssetComposition,
                                   submitData
                               }) => {
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleBasicInfoChange = (e) => {
         setBasicInfo(e.target.value);
@@ -64,6 +66,10 @@ const InformationContainer = ({
 
     const handleAssetCompositionChange = (e) => {
         setAssetComposition(e.target.value);
+    };
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
     };
 
     const handleSubmitBasicInfo = () => {
@@ -87,6 +93,26 @@ const InformationContainer = ({
     const handleSubmitAssetComposition = () => {
         const dataWithExtraString = assetComposition + "\n\n앞에 보냈던 펀드기본정보, 재산현황, 기간수익률과 지금보내는 자산구성현황의 정보를 가지고 많은 내용의 운용보고 작성해줘 ";
         submitData(dataWithExtraString, true)
+            .then(() => alert("자산 구성현황이 성공적으로 전송되었습니다."))
+            .catch(() => alert("자산 구성현황 전송에 실패했습니다."));
+    };
+
+    const handleFileUpload = () => {
+        if (!selectedFile) {
+            alert("파일을 선택하세요.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        axios.post("/upload", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+            .then(() => alert("파일이 성공적으로 업로드되었습니다."))
+            .catch(() => alert("파일 업로드에 실패했습니다."));
     };
 
     return (
@@ -127,8 +153,12 @@ const InformationContainer = ({
                 rows={10}
             />
             <StyledButton onClick={handleSubmitAssetComposition}>Create</StyledButton>
+
+            <h2 style={{fontSize: "20px", fontWeight: "bold", color: "gray", padding: "10px"}}>PDF 파일 업로드</h2>
+            <input type="file" accept="application/pdf" onChange={handleFileChange} />
+            <StyledButton onClick={handleFileUpload}>Upload PDF</StyledButton>
         </Container>
     );
-}
+};
 
 export default InformationContainer;
