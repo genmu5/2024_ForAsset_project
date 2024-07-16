@@ -3,6 +3,7 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import styled from 'styled-components';
 
+// Styled components for styling the chat application
 const Container = styled.div`
     display: flex;
     flex: 1;
@@ -40,6 +41,7 @@ const MessageContent = styled.div`
     align-items: center;
     gap: 10px;
     flex-direction: ${props => props.isUser ? 'row-reverse' : 'row'};
+    line-height: 1.5;
 `;
 
 const Avatar = styled.div`
@@ -76,56 +78,58 @@ const Button = styled.button`
 `;
 
 const WebSocketChat = ({ email, chatRoomId }) => {
-    const [client, setClient] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [message, setMessage] = useState('');
-    const [isConnected, setIsConnected] = useState(false);
-    const messagesEndRef = useRef(null);
+    const [client, setClient] = useState(null); // WebSocket 클라이언트 상태
+    const [messages, setMessages] = useState([]); // 채팅 메시지 상태
+    const [message, setMessage] = useState(''); // 현재 입력된 메시지 상태
+    const [isConnected, setIsConnected] = useState(false); // 연결 상태 추적
+    const messagesEndRef = useRef(null); // 메시지 컨테이너 끝을 추적하기 위한 ref
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
         if (!client) {
             const stompClient = new Client({
-                webSocketFactory: () => new SockJS('http://localhost:8080/chat'),
+                webSocketFactory: () => new SockJS('http://localhost:8080/chat'), // SockJS를 사용한 WebSocket 팩토리
                 connectHeaders: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // 인증 헤더
                 },
                 debug: function (str) {
-                    console.log(str);
+                    console.log(str); // 디버그 출력
                 },
-                reconnectDelay: 5000,
+                reconnectDelay: 5000, // 재연결 지연 시간 (밀리초)
                 onConnect: () => {
                     console.log('Connected');
-                    setIsConnected(true);
+                    setIsConnected(true); // 연결 상태 true로 설정
 
+                    // 채팅방 토픽 구독
                     stompClient.subscribe(`/topic/chatroom/${chatRoomId}`, messageOutput => {
                         console.log('Message received:', messageOutput.body);
-                        const newMessage = JSON.parse(messageOutput.body);
+                        const newMessage = JSON.parse(messageOutput.body); // 수신된 메시지 파싱
                         setMessages(prevMessages => {
                             if (prevMessages.some(msg => msg.id === newMessage.id)) {
-                                return prevMessages;
+                                return prevMessages; // 중복 메시지 방지
                             }
-                            return [...prevMessages, newMessage];
+                            return [...prevMessages, newMessage]; // 새 메시지를 상태에 추가
                         });
                     });
 
-                    // 초기 메시지 설정
+                    // 초기 인사 메시지 설정
                     setMessages([{ id: 'init', email: 'ChatGPT', content: '안녕하세요! 어떤 도움이 필요하세요?' }]);
                 },
                 onDisconnect: () => {
                     console.log('Disconnected');
-                    setIsConnected(false);
+                    setIsConnected(false); // 연결 상태 false로 설정
                 },
                 onStompError: (frame) => {
                     console.error('Broker reported error: ' + frame.headers['message']);
                     console.error('Additional details: ' + frame.body);
-                    setIsConnected(false);
+                    setIsConnected(false); // 연결 상태 false로 설정
                 },
             });
 
-            stompClient.activate();
+            stompClient.activate(); // WebSocket 연결 활성화
             setClient(stompClient);
 
+            // 컴포넌트 언마운트 시 클라이언트 비활성화
             return () => {
                 if (client !== null) {
                     client.deactivate();
@@ -135,22 +139,23 @@ const WebSocketChat = ({ email, chatRoomId }) => {
     }, [chatRoomId, client]);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); // 메시지 컨테이너 끝으로 자동 스크롤
     }, [messages]);
 
     const sendMessage = () => {
         if (client && isConnected && message.trim() !== '') {
             console.log('Sending message:', message);
 
-            // 내 메시지를 로컬 상태에 추가
+            // 사용자의 메시지를 로컬 상태에 추가
             const userMessage = { id: Date.now(), email, content: message };
             setMessages(prevMessages => [...prevMessages, userMessage]);
 
+            // 메시지를 WebSocket 서버로 전송
             client.publish({
                 destination: `/app/chat.sendMessage`,
                 body: JSON.stringify({ senderEmail: email, content: message })
             });
-            setMessage('');
+            setMessage(''); // 메시지 입력 필드 비우기
         } else {
             console.error('Unable to send message: Not connected or message is empty');
         }
@@ -158,7 +163,7 @@ const WebSocketChat = ({ email, chatRoomId }) => {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            sendMessage();
+            sendMessage(); // Enter 키를 누르면 메시지 전송
         }
     };
 
@@ -174,11 +179,13 @@ const WebSocketChat = ({ email, chatRoomId }) => {
                                         {msg.content}
                                     </div>
                                 </MessageContent>
+                                {/* Uncomment to display avatar */}
                                 {/* <Avatar isUser={true} /> */}
                             </>
                         )}
                         {msg.email !== email && (
                             <>
+                                {/* Uncomment to display avatar */}
                                 {/* <Avatar isUser={false} /> */}
                                 <MessageContent isUser={false}>
                                     <div>
@@ -189,7 +196,7 @@ const WebSocketChat = ({ email, chatRoomId }) => {
                         )}
                     </MessageWrapper>
                 ))}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef} /> {/* 자동 스크롤을 위한 ref */}
             </MessagesContainer>
             <InputContainer>
                 <Input
