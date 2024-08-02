@@ -19,7 +19,7 @@ const ListContainer = styled.div`
     border-radius: 10px;
     width: 100%;
     height: 33px;
-    background-color: ${props => (props.isSelected || props.isMenuOpen ? "#172855" : "transparent")}; // 선택된 항목과 메뉴가 열린 항목의 배경색 변경
+    background-color: ${props => (props.isSelected || props.isMenuOpen ? "gray" : "transparent")}; // 선택된 항목과 메뉴가 열린 항목의 배경색 변경
     cursor: pointer;
     position: relative; // 메뉴 위치를 위해 추가
 `;
@@ -63,12 +63,8 @@ const Text = styled.p`
     font-style: normal;
     font-weight: bold;
     text-align: left;
-    color: #fff;
+    color: #000;
 `;
-
-const iconStyle = {
-    color: 'red'
-};
 
 const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemove, onToggleMenu }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -113,7 +109,7 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
                     onClick={handleBookmarkClick}
                     alt={"bookmark"}
                 />
-                <Text isSelected={isSelected} isMenuOpen={isMenuOpen}>{content}</Text>
+                <Text isSelected={isSelected} isMenuOpen={isMenuOpen}>{content.title}</Text>
                 <MoreIcon onClick={toggleMenu} src={more_icon} alt={"more_icon"} />
                 <Menu show={isMenuOpen}>
                     <MenuItem onClick={handleRemoveClick}>내역 삭제</MenuItem>
