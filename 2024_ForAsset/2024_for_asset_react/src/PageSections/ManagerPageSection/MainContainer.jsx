@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import fs from 'fs';
 import SideBarContainer from "../../components/SideBarContainer";
 import UserProfile from "../../components/UserProfile";
 import InformationContainer from "../ManagerPageSection/InformationContainer";
@@ -18,6 +17,7 @@ const Container = styled.div`
 
 const Header = styled.div`
     display: flex;
+    border-bottom: solid 1px #A5A5A5;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
@@ -86,19 +86,26 @@ const MainContainer = () => {
     const [report, setReport] = useState("");
     const [message, setMessage] = useState("");
 
-    const dataFilePath = './data/chatData.json';
-
     useEffect(() => {
         // Load initial data from JSON file
-        if (fs.existsSync(dataFilePath)) {
-            const data = fs.readFileSync(dataFilePath);
-            setChatData(JSON.parse(data));
-        }
+        fetch('/api/chats')
+            .then(response => response.json())
+            .then(data => setChatData(data))
+            .catch(error => console.error('Error loading data:', error));
     }, []);
 
-    const saveData = () => {
-        // Save data to JSON file
-        fs.writeFileSync(dataFilePath, JSON.stringify(chatData, null, 2));
+    const saveData = (data) => {
+        // Save data to JSON file on the server
+        fetch('/api/chats', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.error('Error saving data:', error));
     };
 
     const handleSendMessage = () => {
@@ -123,14 +130,14 @@ const MainContainer = () => {
                 updatedChatData[selectedIndex].messages.push({ text: data, type: "bot" });
                 setChatData(updatedChatData);
                 setReport(data); // Assume the report is the response for simplicity
-                saveData();
+                saveData(updatedChatData);
             })
             .catch(error => {
                 console.error('Error submitting data:', error);
                 const updatedChatData = [...chatData];
                 updatedChatData[selectedIndex].messages.push({ text: "서버에서 답변을 가져오는 중 오류가 발생했습니다.", type: "bot" });
                 setChatData(updatedChatData);
-                saveData();
+                saveData(updatedChatData);
             });
     };
 
@@ -138,7 +145,7 @@ const MainContainer = () => {
         const updatedChatData = [...chatData];
         updatedChatData[index].title = newTitle;
         setChatData(updatedChatData);
-        saveData();
+        saveData(updatedChatData);
     };
 
     const handleComplete = () => {
@@ -151,7 +158,7 @@ const MainContainer = () => {
         `;
         setChatData(updatedChatData);
         setReport(currentChat.report);
-        saveData();
+        saveData(updatedChatData);
     };
 
     const handleItemClick = (index) => {
@@ -172,21 +179,21 @@ const MainContainer = () => {
         const updatedChatData = [newChat, ...chatData];
         setChatData(updatedChatData);
         setSelectedIndex(0);
-        saveData();
+        saveData(updatedChatData);
     };
 
     const handleRemoveChat = (index) => {
         const updatedChatData = chatData.filter((_, i) => i !== index);
         setChatData(updatedChatData);
         setSelectedIndex(null);
-        saveData();
+        saveData(updatedChatData);
     };
 
     const handleBookmarkToggle = (index) => {
         const updatedChatData = [...chatData];
         updatedChatData[index].bookmarked = !updatedChatData[index].bookmarked;
         setChatData(updatedChatData);
-        saveData();
+        saveData(updatedChatData);
     };
 
     return (
@@ -195,7 +202,6 @@ const MainContainer = () => {
                 <Logo src={logo} alt="Logo" />
                 <HeaderRight>
                     <UserProfile />
-                    <Button onClick={saveData}>Save</Button>
                     <Button>Log out</Button>
                     <Button>Help</Button>
                 </HeaderRight>
@@ -225,14 +231,14 @@ const MainContainer = () => {
                                     const updatedChatData = [...chatData];
                                     updatedChatData[selectedIndex].fundName = newFundName;
                                     setChatData(updatedChatData);
-                                    saveData();
+                                    saveData(updatedChatData);
                                 }}
                                 period={chatData[selectedIndex].period}
                                 setPeriod={(newPeriod) => {
                                     const updatedChatData = [...chatData];
                                     updatedChatData[selectedIndex].period = newPeriod;
                                     setChatData(updatedChatData);
-                                    saveData();
+                                    saveData(updatedChatData);
                                 }}
                                 onComplete={handleComplete}
                             />

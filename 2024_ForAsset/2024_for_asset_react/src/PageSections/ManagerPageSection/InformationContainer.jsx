@@ -106,15 +106,6 @@ const InformationContainer = ({ onSendMessage, message, setMessage, title, onTit
                 onChange={(e) => setPeriod(e.target.value)}
             />
             <CompleteButton onClick={onComplete}>Complete</CompleteButton>
-            <InputContainer>
-                <ChatInput
-                    type="text"
-                    placeholder="What's in your mind?..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-                <SendButton onClick={onSendMessage}>Send</SendButton>
-            </InputContainer>
         </Container>
     );
 }
