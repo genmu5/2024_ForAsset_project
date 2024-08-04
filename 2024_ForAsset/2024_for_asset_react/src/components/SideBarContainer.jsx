@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-// import TitleComponent from "./TitleComponent";
 import NewChatButton from "./NewChatButton";
 import SideBarListContainer from "./SideBarListContainer";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
@@ -29,6 +28,15 @@ const ContentContainer = styled.div`
     margin-top: 20px;
 `;
 
+const SearchInput = styled.input`
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 16px;
+`;
+
 const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
     const [contents, setContents] = useState([
         "Create Html Game Environment for Website",
@@ -41,6 +49,7 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
     const [menuOpenIndex, setMenuOpenIndex] = useState(null); // Current open menu index
+    const [searchQuery, setSearchQuery] = useState("");
 
     const handleNewChatClick = () => {
         const newContents = ["New Report", ...contents]; // Add new item at the front
@@ -78,6 +87,14 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
         setMenuOpenIndex(index);
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredContents = contents.filter(content =>
+        content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (menuOpenIndex !== null) {
@@ -93,15 +110,20 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
 
     return (
         <Container onClick={(e) => e.stopPropagation()}>
-            {/*<FixedHeader>*/}
-            {/*    <TitleComponent mainTitle={mainTitle} />*/}
-            {/*</FixedHeader>*/}
+            <FixedHeader>
+                <SearchInput
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+            </FixedHeader>
             <FixedHeader>
                 <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick} />
             </FixedHeader>
             <ContentContainer>
                 <SideBarListContainer
-                    contents={contents}
+                    contents={filteredContents}
                     selectedIndex={selectedIndex}
                     menuOpenIndex={menuOpenIndex}
                     onItemClick={handleItemClick}
