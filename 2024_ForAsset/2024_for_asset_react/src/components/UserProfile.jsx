@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import userProfile from '../images/user_profile.png';
+import settingsIcon from '../images/settings_icon.png';
 
 const UserProfileContainer = styled.div`
     display: flex;
@@ -24,11 +25,17 @@ const UserName = styled.span`
     color: #333;
 `;
 
+const SettingsIcon = styled.img`
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+`;
 
 const UserProfile = () => (
     <UserProfileContainer>
         <UserProfileImage src={userProfile} alt="user_profile" />
         <UserName>Username</UserName>
+        {/*<SettingsIcon src={settingsIcon} alt="settings_icon" />*/}
     </UserProfileContainer>
 );
 

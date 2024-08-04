@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import bookmark_filled_star from "../images/bookmark_filled_star.png"; // 북마크 필드 스타 아이콘 이미지
-import bookmark_empty_star from "../images/bookmark_empty_star.png"; // 북마크 빈 별 아이콘 이미지
-import more_icon from "../images/more_icon.png"; // 가로 점 3개 아이콘 이미지
+import bookmark_filled_star from "../images/bookmark_filled_star.png"; // Bookmark filled star icon image
+import bookmark_empty_star from "../images/bookmark_empty_star.png"; // Bookmark empty star icon image
+import more_icon from "../images/more_icon.png"; // More icon image
 
 const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 2px;
+    margin: 10px 0;
 `;
 
 const ListContainer = styled.div`
@@ -18,20 +18,19 @@ const ListContainer = styled.div`
     gap: 14px;
     border-radius: 10px;
     width: 100%;
-    height: 33px;
-    background-color: ${props => (props.isSelected || props.isMenuOpen ? "gray" : "transparent")}; // 선택된 항목과 메뉴가 열린 항목의 배경색 변경
+    height: 40px;
+    background-color: ${props => (props.isSelected || props.isMenuOpen ? "#F0F0F0" : "transparent")}; // Change background color for selected and menu open items
     cursor: pointer;
-    position: relative; // 메뉴 위치를 위해 추가
+    position: relative; // For menu positioning
 `;
 
 const Icon = styled.img`
     width: 23px;
     height: 23px;
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(100%) contrast(100%);
-    cursor: pointer; // 마우스 커서를 포인터로 변경
+    cursor: pointer; // Change cursor to pointer
     &:hover {
-        transform: scale(1.01); // 스케일 - 마우스 커서가 닿았을 때 버튼 크기 조절
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // 버튼 그림자
+        transform: scale(1.01); // Scale on hover
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Shadow on hover
     }
 `;
 
@@ -59,11 +58,10 @@ const MenuItem = styled.div`
 `;
 
 const Text = styled.p`
-    font-size: 18px;
-    font-style: normal;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: normal;
     text-align: left;
-    color: #000;
+    color: #333;
 `;
 
 const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemove, onToggleMenu }) => {
@@ -88,7 +86,7 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (componentRef.current && !componentRef.current.contains(event.target)) {
-                onToggleMenu(null); // 메뉴를 닫습니다.
+                onToggleMenu(null); // Close menu
             }
         };
 
@@ -109,7 +107,7 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
                     onClick={handleBookmarkClick}
                     alt={"bookmark"}
                 />
-                <Text isSelected={isSelected} isMenuOpen={isMenuOpen}>{content.title}</Text>
+                <Text>{content}</Text>
                 <MoreIcon onClick={toggleMenu} src={more_icon} alt={"more_icon"} />
                 <Menu show={isMenuOpen}>
                     <MenuItem onClick={handleRemoveClick}>내역 삭제</MenuItem>

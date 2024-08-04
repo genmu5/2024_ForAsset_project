@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import TitleComponent from "./TitleComponent";
+// import TitleComponent from "./TitleComponent";
 import NewChatButton from "./NewChatButton";
 import SideBarListContainer from "./SideBarListContainer";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
@@ -29,33 +29,23 @@ const ContentContainer = styled.div`
     margin-top: 20px;
 `;
 
-const SearchInput = styled.input`
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    font-size: 16px;
-`;
-
 const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
     const [contents, setContents] = useState([
-        { title: "Create Html Game Environment for Website", date: "2024.07.14" },
-        { title: "Project Meeting Notes", date: "2024.07.14" },
-        { title: "Client Feedback", date: "2024.07.14" },
-        { title: "Weekly Report", date: "2024.07.14" },
-        { title: "Budget Plan", date: "2024.07.14" },
+        "Create Html Game Environment for Website",
+        "Project Meeting Notes",
+        "Client Feedback",
+        "Weekly Report",
+        "Budget Plan"
     ]);
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
-    const [menuOpenIndex, setMenuOpenIndex] = useState(null); // 현재 열린 메뉴의 인덱스
-    const [searchQuery, setSearchQuery] = useState("");
+    const [menuOpenIndex, setMenuOpenIndex] = useState(null); // Current open menu index
 
     const handleNewChatClick = () => {
-        const newContents = [{ title: "New Report", date: new Date().toISOString().split('T')[0] }, ...contents]; // 새로운 항목을 맨 앞에 추가
+        const newContents = ["New Report", ...contents]; // Add new item at the front
         setContents(newContents);
-        setSelectedIndex(0); // 새로 추가된 항목을 선택된 상태로 설정
+        setSelectedIndex(0); // Set the newly added item as selected
     };
 
     const handleItemClick = (index) => {
@@ -88,32 +78,30 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
         setMenuOpenIndex(index);
     };
 
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
-    };
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuOpenIndex !== null) {
+                setMenuOpenIndex(null);
+            }
+        };
 
-    const filteredContents = contents.filter(content =>
-        content.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        content.date.includes(searchQuery)
-    );
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [menuOpenIndex]);
 
     return (
         <Container onClick={(e) => e.stopPropagation()}>
-            <FixedHeader>
-                <TitleComponent mainTitle={mainTitle} />
-                <SearchInput
-                    type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                />
-            </FixedHeader>
+            {/*<FixedHeader>*/}
+            {/*    <TitleComponent mainTitle={mainTitle} />*/}
+            {/*</FixedHeader>*/}
             <FixedHeader>
                 <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick} />
             </FixedHeader>
             <ContentContainer>
                 <SideBarListContainer
-                    contents={filteredContents}
+                    contents={contents}
                     selectedIndex={selectedIndex}
                     menuOpenIndex={menuOpenIndex}
                     onItemClick={handleItemClick}
