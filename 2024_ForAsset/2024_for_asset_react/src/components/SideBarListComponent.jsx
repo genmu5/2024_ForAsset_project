@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import bookmark_filled_star from "../images/bookmark_filled_star.png"; // Bookmark filled star icon image
 import bookmark_empty_star from "../images/bookmark_empty_star.png"; // Bookmark empty star icon image
@@ -64,13 +64,12 @@ const Text = styled.p`
     color: #333;
 `;
 
-const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemove, onToggleMenu }) => {
-    const [isBookmarked, setIsBookmarked] = useState(false);
+const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemove, onToggleMenu, onBookmarkToggle }) => {
     const componentRef = useRef(null);
 
     const handleBookmarkClick = (e) => {
         e.stopPropagation();
-        setIsBookmarked(!isBookmarked);
+        onBookmarkToggle();
     };
 
     const toggleMenu = (e) => {
@@ -103,11 +102,11 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
         <Container ref={componentRef}>
             <ListContainer isSelected={isSelected} isMenuOpen={isMenuOpen} onClick={onClick}>
                 <Icon
-                    src={isBookmarked ? bookmark_filled_star : bookmark_empty_star}
+                    src={content.bookmarked ? bookmark_filled_star : bookmark_empty_star}
                     onClick={handleBookmarkClick}
                     alt={"bookmark"}
                 />
-                <Text>{content}</Text>
+                <Text>{content.title}</Text>
                 <MoreIcon onClick={toggleMenu} src={more_icon} alt={"more_icon"} />
                 <Menu show={isMenuOpen}>
                     <MenuItem onClick={handleRemoveClick}>내역 삭제</MenuItem>

@@ -8,7 +8,7 @@ const Container = styled.div`
     flex-direction: column;
 `;
 
-const SideBarListContainer = ({ contents, selectedIndex, menuOpenIndex, onItemClick, onItemRemove, onToggleMenu }) => {
+const SideBarListContainer = ({ contents, selectedIndex, menuOpenIndex, onItemClick, onItemRemove, onToggleMenu, onBookmarkToggle }) => {
     return (
         <Container>
             {contents.map((content, index) => (
@@ -20,6 +20,7 @@ const SideBarListContainer = ({ contents, selectedIndex, menuOpenIndex, onItemCl
                     onClick={() => onItemClick(index)}
                     onRemove={() => onItemRemove(index)}
                     onToggleMenu={() => onToggleMenu(index)}
+                    onBookmarkToggle={() => onBookmarkToggle(index)}
                 />
             ))}
         </Container>

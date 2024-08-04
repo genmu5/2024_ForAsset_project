@@ -3,14 +3,16 @@ import styled from "styled-components";
 import TitleComponent from "../../components/TitleComponent";
 
 const Container = styled.div`
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 60%;
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 `;
 
 const AnswerContainer = styled.div`

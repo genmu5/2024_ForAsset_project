@@ -29,7 +29,8 @@ const ContentContainer = styled.div`
 `;
 
 const SearchInput = styled.input`
-    width: 100%;
+    width: 95%;
+    justify-content: center;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -37,29 +38,11 @@ const SearchInput = styled.input`
     font-size: 16px;
 `;
 
-const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
-    const [contents, setContents] = useState([
-        "Create Html Game Environment for Website",
-        "Project Meeting Notes",
-        "Client Feedback",
-        "Weekly Report",
-        "Budget Plan"
-    ]);
-    const [selectedIndex, setSelectedIndex] = useState(null);
+const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, onBookmarkToggle, selectedIndex }) => {
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
     const [menuOpenIndex, setMenuOpenIndex] = useState(null); // Current open menu index
     const [searchQuery, setSearchQuery] = useState("");
-
-    const handleNewChatClick = () => {
-        const newContents = ["New Report", ...contents]; // Add new item at the front
-        setContents(newContents);
-        setSelectedIndex(0); // Set the newly added item as selected
-    };
-
-    const handleItemClick = (index) => {
-        setSelectedIndex(index);
-    };
 
     const handleItemRemove = (index) => {
         setShowModal(true);
@@ -67,15 +50,9 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
     };
 
     const confirmRemove = () => {
-        const newContents = contents.filter((_, i) => i !== indexToRemove);
-        setContents(newContents);
+        onRemoveChat(indexToRemove);
         setShowModal(false);
         setIndexToRemove(null);
-        if (selectedIndex === indexToRemove) {
-            setSelectedIndex(null);
-        } else if (selectedIndex > indexToRemove) {
-            setSelectedIndex(selectedIndex - 1);
-        }
     };
 
     const cancelRemove = () => {
@@ -91,8 +68,8 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
         setSearchQuery(e.target.value);
     };
 
-    const filteredContents = contents.filter(content =>
-        content.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredChats = chatData.filter(chat =>
+        chat.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     useEffect(() => {
@@ -119,16 +96,17 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor }) => {
                 />
             </FixedHeader>
             <FixedHeader>
-                <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick} />
+                <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={onNewChatClick} />
             </FixedHeader>
             <ContentContainer>
                 <SideBarListContainer
-                    contents={filteredContents}
+                    contents={filteredChats}
                     selectedIndex={selectedIndex}
                     menuOpenIndex={menuOpenIndex}
-                    onItemClick={handleItemClick}
+                    onItemClick={onItemClick}
                     onItemRemove={handleItemRemove}
                     onToggleMenu={toggleMenu}
+                    onBookmarkToggle={onBookmarkToggle}
                 />
                 {showModal && (
                     <DeleteConfirmationModal
