@@ -33,16 +33,22 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	//JWT
-	implementation "io.jsonwebtoken:jjwt:0.9.1"
 	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	//jjwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 	//WebSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	//Scheduled 위한 의존성 추가
 	implementation 'org.jsoup:jsoup:1.14.3'
+	//OAuth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//mysql
+	runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+	//html
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.apache.pdfbox:pdfbox:2.0.24'
 }
 
 tasks.named('test') {

@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import logo from "../logo.svg";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "../security/AuthContext";
 
 const Container = styled.div`
     display: flex;
@@ -56,23 +58,42 @@ const Button = styled.div`
 
 
 const HeaderComponent = () => {
+
+    const authContext = useAuth();
+    const navigate = useNavigate();
+
+    const LoginClickHandler = () =>{
+        navigate('/login');
+    };
+
+    const SignUpClickHandler = () =>{
+        navigate('/signup');
+    };
+
+    const LogOutClickHandler = () =>{
+        authContext.logout();
+        alert('로그아웃 되었습니다.')
+        navigate('/');
+    };
+
     return(
         <Container>
             <NavWrapper>
-                <Icon src={logo} />
+                <Icon src={logo} onClick={() => navigate('/')}/>
                 <NavigationWrapper>
                     <TextWrapper>
                         <p>개인회원</p>
                         <p>기업회원</p>
                     </TextWrapper>
-                    <ButtonWrapper>
-                        <Button isLogin={true}>
-                            로그인
-                        </Button>
-                        <Button isLogin={false}>
-                            회원가입
-                        </Button>
-                    </ButtonWrapper>
+                    {!authContext.isAuthenticated &&
+                        <ButtonWrapper>
+                            <Button isLogin={true} onClick={LoginClickHandler}>로그인</Button>
+                            <Button isLogin={false} onClick={SignUpClickHandler}>회원가입</Button>
+                        </ButtonWrapper>}
+                    {authContext.isAuthenticated &&
+                        <ButtonWrapper>
+                            <Button isLogin={false} onClick={LogOutClickHandler}>로그아웃</Button>
+                        </ButtonWrapper>}
                 </NavigationWrapper>
             </NavWrapper>
         </Container>
