@@ -44,6 +44,11 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.14.3'
 	//OAuth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//mysql
+	runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+	//html
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.apache.pdfbox:pdfbox:2.0.24'
 }
 
 tasks.named('test') {

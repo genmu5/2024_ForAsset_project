@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>펀드 보고서</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 210mm;
+            height: 297mm;
+            background-color: #fff;
+            padding: 15mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #e6e6e6;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff8c00;
+        }
+        .header .fund-title {
+            font-size: 18px;
+            color: #726350;
+        }
+        .summary-section {
+            margin-top: 10px;
+        }
+        .summary-section h2 {
+            font-size: 18px;
+            color: #726350;
+            margin-bottom: 5px;
+        }
+        .performance-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .performance-section > div {
+            width: 48%;
+        }
+        .performance-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .performance-summary .left {
+            width: 60%;
+        }
+        .performance-summary .right {
+            text-align: right;
+            width: 40%;
+        }
+        .performance-summary .performance-value {
+            font-size: 26px;
+            color: #e0a423;
+        }
+        .footer {
+            background-color: #F3F3F3;
+            font-size: 11px;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 3px;
+        }
+        .footer-logo hr {
+            flex-grow: 1;
+            border: none;
+            height: 7px;
+            background-color: #726350;
+            margin-right: 10px;
+        }
+        .footer-logo img {
+            height: 35px;
+            width: auto;
+        }
+        table {
+            font-size: 11px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #90877E;
+            color: white;
+        }
+        .asset-section {
+            margin-top: 10px;
+        }
+        .asset-section h2 {
+            font-size: 20px;
+            color: #726350;
+            margin-bottom: 5px;
+        }
+        .asset-section .asset-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        .asset-box {
+            width: 32%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .asset-box h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .asset-box p {
+            margin: 0;
+            color: #999;
+        }
+        .asset-box img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div>
+        <div class="header">
+            <div class="title">KB Asset Management Fund Report</div>
+            <div class="fund-title" th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].fundTitle}">펀드 타이틀</div>
+            <div class="fund-title" th:unless="${funds != null and !funds.isEmpty()}">펀드 타이틀 없음</div>
+        </div>
+        <div class="summary-section">
+            <h2>펀드개요</h2>
+            <p th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].fundOverview}">펀드 개요 설명</p>
+            <p th:unless="${funds != null and !funds.isEmpty()}">펀드 개요 정보 없음</p>
+            <table>
+                <tr>
+                    <th>설정일</th>
+                    <th>신탁수수료</th>
+                    <th>운용규모</th>
+                    <th>판매방법</th>
+                    <th>비교지수(BM)</th>
+                </tr>
+                <tr>
+                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].setupDate}">설정일</td>
+                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
+                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].trustFee}">신탁수수료</td>
+                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
+                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].operationScale}">운용규모</td>
+                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
+                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].salesMethod}">판매방법</td>
+                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
+                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].benchmark}">비교지수</td>
+                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
+                </tr>
+            </table>
+        </div>
+        <div class="summary-section">
+            <h2>펀드운용성과</h2>
+            <div class="performance-summary">
+                <div class="left">
+                    <p th:text="${performanceSummary}">펀드운용성과 요약</p>
+                </div>
+                <div class="right">
+                    <div th:text="${performancePeriod}">기간</div>
+                    <div class="performance-value" th:text="${performanceValue}">성과값</div>
+                    <div th:text="${benchmarkPerformance}">비교지수(BM): 성과</div>
+                </div>
+            </div>
+            <div class="performance-section">
+                <div>
+                    <h3>누적수익률</h3>
+                    <table>
+                        <tr>
+                            <th>구분</th>
+                            <th>3개월</th>
+                            <th>6개월</th>
+                            <th>1년</th>
+                            <th>3년</th>
+                            <th>5년</th>
+                        </tr>
+                        <tr>
+                            <td>펀드</td>
+                            <td th:text="${cumulativeReturn3m}">3개월 수익률</td>
+                            <td th:text="${cumulativeReturn6m}">6개월 수익률</td>
+                            <td th:text="${cumulativeReturn1y}">1년 수익률</td>
+                            <td th:text="${cumulativeReturn3y}">3년 수익률</td>
+                            <td th:text="${cumulativeReturn5y}">5년 수익률</td>
+                        </tr>
+                        <tr>
+                            <td>BM</td>
+                            <td th:text="${benchmarkReturn3m}">3개월 BM 수익률</td>
+                            <td th:text="${benchmarkReturn6m}">6개월 BM 수익률</td>
+                            <td th:text="${benchmarkReturn1y}">1년 BM 수익률</td>
+                            <td th:text="${benchmarkReturn3y}">3년 BM 수익률</td>
+                            <td th:text="${benchmarkReturn5y}">5년 BM 수익률</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h3>연도별 수익률</h3>
+                    <table>
+                        <tr>
+                            <th>구분</th>
+                            <th>2018년</th>
+                            <th>2019년</th>
+                            <th>2020년</th>
+                            <th>2021년</th>
+                        </tr>
+                        <tr>
+                            <td>펀드</td>
+                            <td th:text="${annualReturn2018}">2018년 수익률</td>
+                            <td th:text="${annualReturn2019}">2019년 수익률</td>
+                            <td th:text="${annualReturn2020}">2020년 수익률</td>
+                            <td th:text="${annualReturn2021}">2021년 수익률</td>
+                        </tr>
+                        <tr>
+                            <td>BM</td>
+                            <td th:text="${benchmarkReturn2018}">2018년 BM 수익률</td>
+                            <td th:text="${benchmarkReturn2019}">2019년 BM 수익률</td>
+                            <td th:text="${benchmarkReturn2020}">2020년 BM 수익률</td>
+                            <td th:text="${benchmarkReturn2021}">2021년 BM 수익률</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="asset-section">
+            <h2>펀드자산현황</h2>
+            <p th:text="${assetStatus}">자산현황 설명</p>
+            <div class="asset-content">
+                <div class="asset-box">
+                    <h3>자산구성현황</h3>
+                    <img th:src="@{${assetCompositionChart}}" alt="자산구성현황 차트">
+                </div>
+                <div class="asset-box">
+                    <h3>업종구성 (상위 10개)</h3>
+                    <p th:text="${topIndustries}">업종구성 설명</p>
+                </div>
+                <div class="asset-box">
+                    <h3>주요투자종목 (상위 10개)</h3>
+                    <p th:text="${topInvestments}">투자종목 설명</p>
+                </div>
+            </div>
+            <p th:text="${complianceInfo}">준법감시인 정보</p>
+        </div>
+    </div>
+    <div class="footer-logo">
+        <hr>
+        <img th:src="@{/로고.jfif}" alt="KB 자산운용 로고">
+    </div>
+</div>
+</body>
+</html>

@@ -16,7 +16,7 @@ public class FundPerformance {
     @Column(name = "price", nullable = false)
     private String price;
 
-    @Column(name = "change", nullable = false)
+    @Column(name = "'change'", nullable = false)
     private String change;
 
     @Column(name = "percent", nullable = false)
