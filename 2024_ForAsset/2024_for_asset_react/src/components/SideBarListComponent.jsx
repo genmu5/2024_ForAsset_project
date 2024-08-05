@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import bookmark_filled_star from "../images/bookmark_filled_star.png"; // Bookmark filled star icon image
 import bookmark_empty_star from "../images/bookmark_empty_star.png"; // Bookmark empty star icon image
 import more_icon from "../images/more_icon.png"; // More icon image
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const Container = styled.div`
     display: flex;
@@ -66,6 +67,7 @@ const Text = styled.p`
 
 const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemove, onToggleMenu, onBookmarkToggle }) => {
     const componentRef = useRef(null);
+    const [showModal, setShowModal] = useState(false);
 
     const handleBookmarkClick = (e) => {
         e.stopPropagation();
@@ -79,7 +81,16 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
 
     const handleRemoveClick = (e) => {
         e.stopPropagation();
+        setShowModal(true);
+    };
+
+    const handleConfirmRemove = () => {
         onRemove();
+        setShowModal(false);
+    };
+
+    const handleCancelRemove = () => {
+        setShowModal(false);
     };
 
     useEffect(() => {
@@ -90,11 +101,11 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
         };
 
         if (isMenuOpen) {
-            document.addEventListener('click', handleClickOutside, true);
+            document.addEventListener('mousedown', handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener('click', handleClickOutside, true);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isMenuOpen, onToggleMenu]);
 
@@ -110,11 +121,13 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
                 <MoreIcon onClick={toggleMenu} src={more_icon} alt={"more_icon"} />
                 <Menu show={isMenuOpen}>
                     <MenuItem onClick={handleRemoveClick}>내역 삭제</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); /* TODO: 제목 수정 기능 추가 */ }}>제목 수정</MenuItem>
                 </Menu>
             </ListContainer>
+            {showModal && <DeleteConfirmationModal onConfirm={handleConfirmRemove} onCancel={handleCancelRemove} />}
         </Container>
     );
 }
 
 export default SideBarListComponent;
+
+//                    <MenuItem onClick={(e) => { e.stopPropagation(); /* TODO: 제목 수정 기능 추가 */ }}>제목 수정</MenuItem>

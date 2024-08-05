@@ -11,6 +11,7 @@ const ModalOverlay = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 `;
 
 const ModalContent = styled.div`
@@ -18,6 +19,7 @@ const ModalContent = styled.div`
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 const ModalButton = styled.button`
@@ -34,7 +36,7 @@ const ModalButton = styled.button`
 const DeleteConfirmationModal = ({ onConfirm, onCancel }) => {
     return (
         <ModalOverlay>
-            <ModalContent>
+            <ModalContent className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <p>내역을 삭제하시겠습니까?</p>
                 <ModalButton onClick={onConfirm}>네</ModalButton>
                 <ModalButton onClick={onCancel}>아니요</ModalButton>

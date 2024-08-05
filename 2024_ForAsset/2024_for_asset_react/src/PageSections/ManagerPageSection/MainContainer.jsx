@@ -4,6 +4,7 @@ import SideBarContainer from "../../components/SideBarContainer";
 import UserProfile from "../../components/UserProfile";
 import InformationContainer from "../ManagerPageSection/InformationContainer";
 import ReportContainer from "../ManagerPageSection/ReportContainer";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import logo from '../../images/logo.png'; // Import the logo image
 
 const Container = styled.div`
@@ -85,6 +86,8 @@ const MainContainer = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [report, setReport] = useState("");
     const [message, setMessage] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [indexToRemove, setIndexToRemove] = useState(null);
 
     useEffect(() => {
         // Load initial data from JSON file
@@ -166,6 +169,10 @@ const MainContainer = () => {
         setMessage("");
         const selectedChat = chatData[index];
         setReport(selectedChat.report || "");
+        if (showModal) {
+            setShowModal(false);
+            document.removeEventListener('click', handleOutsideClick, true);
+        }
     };
 
     const handleNewChatClick = () => {
@@ -180,6 +187,10 @@ const MainContainer = () => {
         setChatData(updatedChatData);
         setSelectedIndex(0);
         saveData(updatedChatData);
+        if (showModal) {
+            setShowModal(false);
+            document.removeEventListener('click', handleOutsideClick, true);
+        }
     };
 
     const handleRemoveChat = (index) => {
@@ -194,6 +205,31 @@ const MainContainer = () => {
         updatedChatData[index].bookmarked = !updatedChatData[index].bookmarked;
         setChatData(updatedChatData);
         saveData(updatedChatData);
+    };
+
+    const showDeleteModal = (index) => {
+        setIndexToRemove(index);
+        setShowModal(true);
+        document.addEventListener('click', handleOutsideClick, true);
+    };
+
+    const confirmRemove = () => {
+        handleRemoveChat(indexToRemove);
+        setShowModal(false);
+        setIndexToRemove(null);
+        document.removeEventListener('click', handleOutsideClick, true);
+    };
+
+    const cancelRemove = () => {
+        setShowModal(false);
+        setIndexToRemove(null);
+        document.removeEventListener('click', handleOutsideClick, true);
+    };
+
+    const handleOutsideClick = (event) => {
+        if (showModal && !event.target.closest('.modal-content')) {
+            cancelRemove();
+        }
     };
 
     return (
@@ -213,7 +249,7 @@ const MainContainer = () => {
                     chatData={chatData}
                     onNewChatClick={handleNewChatClick}
                     onItemClick={handleItemClick}
-                    onRemoveChat={handleRemoveChat}
+                    onRemoveChat={showDeleteModal}
                     onBookmarkToggle={handleBookmarkToggle}
                     selectedIndex={selectedIndex}
                 />
@@ -250,6 +286,12 @@ const MainContainer = () => {
                     </SectionContainer>
                 </MainContent>
             </InnerContainer>
+            {showModal && (
+                <DeleteConfirmationModal
+                    onConfirm={confirmRemove}
+                    onCancel={cancelRemove}
+                />
+            )}
         </Container>
     );
 }
