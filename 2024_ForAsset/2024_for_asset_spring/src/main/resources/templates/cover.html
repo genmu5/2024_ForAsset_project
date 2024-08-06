@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자산운용 보고서</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 210mm;
+            height: 297mm;
+            background-color: #fff;
+            padding: 20mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #e6e6e6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #726350;
+        }
+        .subtitle {
+            font-size: 24px;
+            color: #777;
+        }
+        .report-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .report-title .period {
+            display: flex;
+            align-items: center;
+            background-color: #726350;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 15px;
+            margin-right: 10px;
+
+        }
+        .report-title .period span {
+            background-color: #e0a423;
+            padding: 3px 10px;
+            border-radius: 15px;
+            margin-left: 10px;
+            width: 300px;
+        }
+        .report-title .report {
+            font-size: 30px;
+            color: #e0a423;
+        }
+        .icon-image {
+            margin-top: 20px;
+            width: 100%;
+            height: auto;
+        }
+        .footer {
+            background-color: #F3F3F3;
+            font-size: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer-logo {
+            margin-top: 10px;
+            text-align: right;
+        }
+        .footer-logo img {
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <hr color = "#726350" size="8">
+        <div class="header">
+            <div class="title-group">
+                <h1 th:text="${fundName}">KB 지수연계</h1>
+            </div>
+        </div>
+        <div class="report-title">
+            <div class="period">
+                운용 기간
+                <span th:text="${operationPeriod}">2021.09.01~2021.11.30</span>
+            </div>
+            <div class="report">자산운용 보고서</div>
+        </div>
+        <img th:src="@{/image/아이콘.PNG}"  alt="아이콘 이미지" class="icon-image">
+        <div class="footer">
+            <div>
+                <p>이 상품은 투자신탁입니다. 단위채권형이며, <br>다양한 만기와 수익률 선택이 가능한 증권형 펀드입니다.</p>
+                <p>자산운용보고서는 자본시장과 금융투자업에 관한 법률에 의거 자산운용사가 작성하며,<br> 투자자가 가입한 금융 상품의 투자행위가 종료된 후 3개월 이내의 자산운용에 대한 결과를 요약하여 작성하는 보고서입니다.</p>               
+            </div>
+        </div>
+        <hr color = "e0a423" size="5">
+        <div class="footer-logo">
+            <img th:src="@{/image/로고.jfif}" alt="KB 자산운용">
+        </div>
+    </div>
+</body>
+</html>

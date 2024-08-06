@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
 
-import static java.util.spi.ToolProvider.findFirst;
 
 @Controller
 public class FundController {
@@ -26,6 +23,7 @@ public class FundController {
     public String getFundReport(
             @RequestParam String fundName,
             @RequestParam String operationPeriod,
+            @RequestParam(defaultValue = "report_template") String templateName,
             Model model) {
 
         String decodedFundName = URLDecoder.decode(fundName, StandardCharsets.UTF_8);
@@ -35,7 +33,6 @@ public class FundController {
         FundNames fundNames = fundService.getFundNames(decodedFundName, decodedOperationPeriod);
         FundResult fundResult = fundService.getFundResult(decodedFundName, decodedOperationPeriod);
         AnnualReturns annualReturns = fundService.getAnnualReturns(decodedFundName, decodedOperationPeriod);
-
 
         if (fundNames == null) {
             throw new ResourceNotFoundException("Fund not found");
@@ -66,7 +63,7 @@ public class FundController {
 
         model.addAttribute("annualReturns", annualReturns);
 
-        return "report_template";
+        return templateName;
     }
 }
 
