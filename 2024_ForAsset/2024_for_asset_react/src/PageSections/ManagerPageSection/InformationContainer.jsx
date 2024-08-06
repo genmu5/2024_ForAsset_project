@@ -112,6 +112,6 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             {message && <Message>{message}</Message>}
         </Container>
     );
-}
+};
 
 export default InformationContainer;

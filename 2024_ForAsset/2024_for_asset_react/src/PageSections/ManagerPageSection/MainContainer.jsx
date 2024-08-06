@@ -170,6 +170,10 @@ const MainContainer = () => {
             .then(data => {
                 if (data.report) {
                     setReport(data.report);
+                    const updatedChatData = [...chatData];
+                    updatedChatData[selectedIndex].report = data.report;
+                    setChatData(updatedChatData);
+                    saveData(updatedChatData);
                 } else {
                     console.error('Failed to generate report:', data);
                 }
@@ -312,3 +316,5 @@ const MainContainer = () => {
 }
 
 export default MainContainer;
+// KB 올에셋 AI 솔루션 EMP 증권 자투자신탁(혼합-재간접형)(UH)(운용)
+// 2024.03.01~2024.05.31

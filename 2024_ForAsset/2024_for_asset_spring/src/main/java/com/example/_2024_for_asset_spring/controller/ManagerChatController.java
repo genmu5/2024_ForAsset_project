@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 public class ManagerChatController {
@@ -47,6 +49,19 @@ public class ManagerChatController {
         } catch (IOException e) {
             return Mono.just(ResponseEntity.badRequest().body("Failed to read PDF file: " + e.getMessage()));
         }
+    }
+
+    @PostMapping("/api/generateReport")
+    public Mono<ResponseEntity<Map<String, String>>> generateReport(@RequestBody Map<String, String> request) {
+        String title = request.get("title");
+        String fundName = request.get("fundName");
+        String period = request.get("period");
+
+        String prompt = String.format("Title: %s\nFund Name: %s\nPeriod: %s\n위 내용을 바탕으로 운용보고를 작성해주세요.", title, fundName, period);
+
+        return managerChatService.getGptResponse(prompt)
+                .map(response -> ResponseEntity.ok(Map.of("report", response)))
+                .defaultIfEmpty(ResponseEntity.badRequest().body(Map.of("error", "Failed to generate report")));
     }
 
     private String extractTextFromPdf(MultipartFile file) throws IOException {

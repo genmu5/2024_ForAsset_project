@@ -25,9 +25,18 @@ const HTMLContainer = styled.div`
 `;
 
 const ReportContainer = ({ answer }) => {
+    const createMarkup = () => {
+        return { __html: answer };
+    };
+
+    // Debugging purpose
+    console.log('Report content:', answer);
+
     return (
         <Container>
-            <HTMLContainer dangerouslySetInnerHTML={{ __html: answer }} />
+            <HTMLContainer>
+                <iframe srcDoc={answer}></iframe>
+            </HTMLContainer>
         </Container>
     );
 };
