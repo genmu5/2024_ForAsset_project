@@ -1,45 +1,44 @@
 package com.example._2024_for_asset_spring.entity.report;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "Fund_Overview")
+@Table(name = "fund_overview")
 public class FundOverview {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Fund_ID")
     private Integer fundId;
 
-    @Column(name = "Operation_Period")
+    @Column(nullable = false)
+    private String fundName;
+
+    @Column(nullable = false)
     private String operationPeriod;
 
-    @Column(name = "Fund_Type")
     private String fundType;
-
-    @Column(name = "Initial_Setting_Date")
     private Date initialSettingDate;
-
-    @Column(name = "Duration")
     private String duration;
-
-    @Column(name = "Operation_Size")
-    private Double operationSize;
-
-    @Column(name = "Setting_Date")
+    private BigDecimal operationSize;
     private Date settingDate;
-
-    @Column(name = "Risk_Level")
     private String riskLevel;
 
-    // Getters and setters
     public Integer getFundId() {
         return fundId;
     }
 
     public void setFundId(Integer fundId) {
         this.fundId = fundId;
+    }
+
+    public String getFundName() {
+        return fundName;
+    }
+
+    public void setFundName(String fundName) {
+        this.fundName = fundName;
     }
 
     public String getOperationPeriod() {
@@ -74,11 +73,11 @@ public class FundOverview {
         this.duration = duration;
     }
 
-    public Double getOperationSize() {
+    public BigDecimal getOperationSize() {
         return operationSize;
     }
 
-    public void setOperationSize(Double operationSize) {
+    public void setOperationSize(BigDecimal operationSize) {
         this.operationSize = operationSize;
     }
 
@@ -97,4 +96,6 @@ public class FundOverview {
     public void setRiskLevel(String riskLevel) {
         this.riskLevel = riskLevel;
     }
+
+    // Getters and Setters
 }

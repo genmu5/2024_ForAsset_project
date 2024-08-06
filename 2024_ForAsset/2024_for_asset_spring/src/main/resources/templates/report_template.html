@@ -161,13 +161,11 @@
     <div>
         <div class="header">
             <div class="title">KB Asset Management Fund Report</div>
-            <div class="fund-title" th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].fundTitle}">펀드 타이틀</div>
-            <div class="fund-title" th:unless="${funds != null and !funds.isEmpty()}">펀드 타이틀 없음</div>
+            <div class="fund-title" th:text="${fundName}">펀드 타이틀</div>
         </div>
         <div class="summary-section">
             <h2>펀드개요</h2>
-            <p th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].fundOverview}">펀드 개요 설명</p>
-            <p th:unless="${funds != null and !funds.isEmpty()}">펀드 개요 정보 없음</p>
+            <p th:text="${investmentObjective}">펀드 개요 설명</p>
             <table>
                 <tr>
                     <th>설정일</th>
@@ -177,16 +175,11 @@
                     <th>비교지수(BM)</th>
                 </tr>
                 <tr>
-                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].setupDate}">설정일</td>
-                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
-                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].trustFee}">신탁수수료</td>
-                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
-                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].operationScale}">운용규모</td>
-                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
-                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].salesMethod}">판매방법</td>
-                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
-                    <td th:if="${funds != null and !funds.isEmpty()}" th:text="${funds[0].benchmark}">비교지수</td>
-                    <td th:unless="${funds != null and !funds.isEmpty()}">정보 없음</td>
+                    <td th:text="${settingDate}">설정일</td>
+                    <td th:text="${trustFee}">신탁수수료</td>
+                    <td th:text="${operationSize}">운용규모</td>
+                    <td th:text="${salesMethod}">판매방법</td>
+                    <td th:text="${benchmark}">비교지수</td>
                 </tr>
             </table>
         </div>
@@ -194,12 +187,12 @@
             <h2>펀드운용성과</h2>
             <div class="performance-summary">
                 <div class="left">
-                    <p th:text="${performanceSummary}">펀드운용성과 요약</p>
+                    <p th:text="'펀드는 지난 3개월 (' + ${operationPeriod} + ') 동안 ' + ${period3M} + ' 의 운용성과를 달성하였습니다. 이는 비교지수(BM)의 수익률에 비해 하는성과입니다.'">펀드는 지난 3개월 (운용기간) 동안</p>
                 </div>
                 <div class="right">
-                    <div th:text="${performancePeriod}">기간</div>
-                    <div class="performance-value" th:text="${performanceValue}">성과값</div>
-                    <div th:text="${benchmarkPerformance}">비교지수(BM): 성과</div>
+                    <div th:text="${operationPeriod}">기간</div>
+                    <div class="performance-value" th:text="${period3M}">성과값</div>
+                    <div th:text="'비교지수(BM): ' + ${bmPeriod3M}">비교지수(BM): 성과</div>
                 </div>
             </div>
             <div class="performance-section">
@@ -215,20 +208,20 @@
                             <th>5년</th>
                         </tr>
                         <tr>
-                            <td>펀드</td>
-                            <td th:text="${cumulativeReturn3m}">3개월 수익률</td>
-                            <td th:text="${cumulativeReturn6m}">6개월 수익률</td>
-                            <td th:text="${cumulativeReturn1y}">1년 수익률</td>
-                            <td th:text="${cumulativeReturn3y}">3년 수익률</td>
-                            <td th:text="${cumulativeReturn5y}">5년 수익률</td>
+                        <td>펀드</td>
+                            <td th:text="${period3M}">-</td>
+                            <td th:text="${period6M}">-</td>
+                            <td th:text="${period1Y}">-</td>
+                            <td th:text="${period3Y}">-</td>
+                            <td th:text="${period5Y}">-</td>
                         </tr>
                         <tr>
                             <td>BM</td>
-                            <td th:text="${benchmarkReturn3m}">3개월 BM 수익률</td>
-                            <td th:text="${benchmarkReturn6m}">6개월 BM 수익률</td>
-                            <td th:text="${benchmarkReturn1y}">1년 BM 수익률</td>
-                            <td th:text="${benchmarkReturn3y}">3년 BM 수익률</td>
-                            <td th:text="${benchmarkReturn5y}">5년 BM 수익률</td>
+                            <td th:text="${bmPeriod3M != null ? bmPeriod3M : '-'}">3개월 BM 수익률</td>
+                            <td th:text="${bmPeriod6M != null ? bmPeriod6M : '-'}">6개월 BM 수익률</td>
+                            <td th:text="${bmPeriod1Y != null ? bmPeriod1Y : '-'}">1년 BM 수익률</td>
+                            <td th:text="${bmPeriod3Y != null ? bmPeriod3Y : '-'}">3년 BM 수익률</td>
+                            <td th:text="${bmPeriod5Y != null ? bmPeriod5Y : '-'}">5년 BM 수익률</td>
                         </tr>
                     </table>
                 </div>
@@ -237,17 +230,17 @@
                     <table>
                         <tr>
                             <th>구분</th>
-                            <th>2018년</th>
-                            <th>2019년</th>
-                            <th>2020년</th>
                             <th>2021년</th>
+                            <th>2022년</th>
+                            <th>2023년</th>
+                            <th>2024년</th>
                         </tr>
                         <tr>
                             <td>펀드</td>
-                            <td th:text="${annualReturn2018}">2018년 수익률</td>
-                            <td th:text="${annualReturn2019}">2019년 수익률</td>
-                            <td th:text="${annualReturn2020}">2020년 수익률</td>
-                            <td th:text="${annualReturn2021}">2021년 수익률</td>
+                            <td th:text="${annualReturns.return2021}+'%'">0.00</td>
+                            <td th:text="${annualReturns.return2022}+'%'">0.00</td>
+                            <td th:text="${annualReturns.return2023}+'%'">0.00</td>
+                            <td th:text="${annualReturns.return2024}+'%'">0.00</td>
                         </tr>
                         <tr>
                             <td>BM</td>
@@ -262,27 +255,26 @@
         </div>
         <div class="asset-section">
             <h2>펀드자산현황</h2>
-            <p th:text="${assetStatus}">자산현황 설명</p>
+            <p>자산현황 설명</p>
             <div class="asset-content">
                 <div class="asset-box">
                     <h3>자산구성현황</h3>
-                    <img th:src="@{${assetCompositionChart}}" alt="자산구성현황 차트">
+                    <img alt="자산구성현황 차트">
                 </div>
                 <div class="asset-box">
                     <h3>업종구성 (상위 10개)</h3>
-                    <p th:text="${topIndustries}">업종구성 설명</p>
+                    <p>업종구성 설명</p>
                 </div>
                 <div class="asset-box">
                     <h3>주요투자종목 (상위 10개)</h3>
-                    <p th:text="${topInvestments}">투자종목 설명</p>
+                    <p>투자종목 설명</p>
                 </div>
             </div>
-            <p th:text="${complianceInfo}">준법감시인 정보</p>
         </div>
     </div>
     <div class="footer-logo">
         <hr>
-        <img th:src="@{/로고.jfif}" alt="KB 자산운용 로고">
+        <img th:src="@{/image/로고.jfif}" alt="KB 자산운용 로고">
     </div>
 </div>
 </body>
