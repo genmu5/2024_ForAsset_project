@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import userProfile from '../images/user_profile.png';
-import settingsIcon from '../images/settings_icon.png';
 
 const UserProfileContainer = styled.div`
     display: flex;

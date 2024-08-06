@@ -93,7 +93,7 @@ const MainContainer = () => {
         // Load initial data from JSON file
         fetch('/api/chats')
             .then(response => response.json())
-            .then(data => setChatData(data))
+            .then(data => setChatData(Array.isArray(data) ? data : [])) // 데이터가 배열인지 확인 후 설정
             .catch(error => console.error('Error loading data:', error));
     }, []);
 
@@ -152,16 +152,31 @@ const MainContainer = () => {
     };
 
     const handleComplete = () => {
-        const updatedChatData = [...chatData];
-        const currentChat = updatedChatData[selectedIndex];
-        currentChat.report = `
-        Title: ${currentChat.title}
-        Fund Name: ${currentChat.fundName}
-        Period: ${currentChat.period}
-        `;
-        setChatData(updatedChatData);
-        setReport(currentChat.report);
-        saveData(updatedChatData);
+        const currentChat = chatData[selectedIndex];
+        const requestData = {
+            title: currentChat.title,
+            fundName: currentChat.fundName,
+            period: currentChat.period
+        };
+
+        fetch('http://localhost:8080/api/generateReport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.report) {
+                    setReport(data.report);
+                } else {
+                    console.error('Failed to generate report:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error generating report:', error);
+            });
     };
 
     const handleItemClick = (index) => {
@@ -187,10 +202,6 @@ const MainContainer = () => {
         setChatData(updatedChatData);
         setSelectedIndex(0);
         saveData(updatedChatData);
-        if (showModal) {
-            setShowModal(false);
-            document.removeEventListener('click', handleOutsideClick, true);
-        }
     };
 
     const handleRemoveChat = (index) => {
@@ -233,7 +244,11 @@ const MainContainer = () => {
     };
 
     return (
-        <Container>
+        <Container onClick={() => {
+            if (showModal) {
+                cancelRemove();
+            }
+        }}>
             <Header>
                 <Logo src={logo} alt="Logo" />
                 <HeaderRight>

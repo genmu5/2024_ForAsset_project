@@ -44,6 +44,14 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewCha
     const [menuOpenIndex, setMenuOpenIndex] = useState(null); // Current open menu index
     const [searchQuery, setSearchQuery] = useState("");
 
+    const handleNewChatClick = () => {
+        onNewChatClick();
+    };
+
+    const handleItemClick = (index) => {
+        onItemClick(index);
+    };
+
     const handleItemRemove = (index) => {
         setShowModal(true);
         setIndexToRemove(index);
@@ -53,6 +61,11 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewCha
         onRemoveChat(indexToRemove);
         setShowModal(false);
         setIndexToRemove(null);
+        if (selectedIndex === indexToRemove) {
+            onItemClick(null);
+        } else if (selectedIndex > indexToRemove) {
+            onItemClick(selectedIndex - 1);
+        }
     };
 
     const cancelRemove = () => {
@@ -68,7 +81,7 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewCha
         setSearchQuery(e.target.value);
     };
 
-    const filteredChats = chatData.filter(chat =>
+    const filteredTitles = chatData.filter(chat =>
         chat.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -96,17 +109,16 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewCha
                 />
             </FixedHeader>
             <FixedHeader>
-                <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={onNewChatClick} />
+                <NewChatButton ButtonBackGroundColor={ButtonBackGroundColor} onClick={handleNewChatClick} />
             </FixedHeader>
             <ContentContainer>
                 <SideBarListContainer
-                    contents={filteredChats}
+                    contents={filteredTitles}
                     selectedIndex={selectedIndex}
                     menuOpenIndex={menuOpenIndex}
-                    onItemClick={onItemClick}
+                    onItemClick={handleItemClick}
                     onItemRemove={handleItemRemove}
                     onToggleMenu={toggleMenu}
-                    onBookmarkToggle={onBookmarkToggle}
                 />
                 {showModal && (
                     <DeleteConfirmationModal

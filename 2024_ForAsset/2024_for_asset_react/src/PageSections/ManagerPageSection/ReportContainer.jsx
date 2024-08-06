@@ -1,11 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import TitleComponent from "../../components/TitleComponent";
 
 const Container = styled.div`
     flex: 1;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     background-color: white;
     border-radius: 10px;
@@ -15,37 +14,22 @@ const Container = styled.div`
     overflow-x: hidden; /* Prevent horizontal scrolling */
 `;
 
-const AnswerContainer = styled.div`
-    margin-top: 20px;
+const HTMLContainer = styled.div`
     width: 100%;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    line-height: 1.5;
-    color: #333;
-    white-space: pre-wrap; /* This preserves the formatting of the text */
-`;
-
-const AnswerTitle = styled.p`
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 20px;
+    height: 100%;
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
 `;
 
 const ReportContainer = ({ answer }) => {
     return (
         <Container>
-            <TitleComponent title={"Report"} />
-            {answer && (
-                <AnswerContainer>
-                    <AnswerTitle>운용보고 작성완료</AnswerTitle>
-                    <p>{answer}</p>
-                </AnswerContainer>
-            )}
+            <HTMLContainer dangerouslySetInnerHTML={{ __html: answer }} />
         </Container>
     );
-}
+};
 
 export default ReportContainer;
