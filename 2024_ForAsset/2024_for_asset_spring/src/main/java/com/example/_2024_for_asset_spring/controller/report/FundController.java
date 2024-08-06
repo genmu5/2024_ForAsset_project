@@ -1,34 +1,72 @@
 package com.example._2024_for_asset_spring.controller.report;
 
-import com.example._2024_for_asset_spring.entity.report.FundNames;
-import com.example._2024_for_asset_spring.entity.report.FundOverview;
+import com.example._2024_for_asset_spring.entity.report.*;
 import com.example._2024_for_asset_spring.service.report.FundService;
+import com.example._2024_for_asset_spring.service.report.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.spi.ToolProvider.findFirst;
 
 @Controller
 public class FundController {
-
     @Autowired
     private FundService fundService;
 
     @GetMapping("/fund-report")
-    public String getFundReport(Model model) {
-        List<FundOverview> fundOverviews = fundService.getAllFundOverviews();
-        List<FundNames> fundNames = fundService.getAllFundNames();
+    public String getFundReport(
+            @RequestParam String fundName,
+            @RequestParam String operationPeriod,
+            Model model) {
 
-        // 로그 추가
-        System.out.println("Fund Overviews in Controller: " + (fundOverviews != null ? fundOverviews : "No fund overviews found"));
-        System.out.println("Fund Names in Controller: " + (fundNames != null ? fundNames : "No fund names found"));
+        String decodedFundName = URLDecoder.decode(fundName, StandardCharsets.UTF_8);
+        String decodedOperationPeriod = URLDecoder.decode(operationPeriod, StandardCharsets.UTF_8);
 
-        model.addAttribute("fundOverviews", fundOverviews != null ? fundOverviews : new ArrayList<>());
-        model.addAttribute("fundNames", fundNames != null ? fundNames : new ArrayList<>());
+        FundOverview fundOverview = fundService.getFundOverview(decodedFundName, decodedOperationPeriod);
+        FundNames fundNames = fundService.getFundNames(decodedFundName, decodedOperationPeriod);
+        FundResult fundResult = fundService.getFundResult(decodedFundName, decodedOperationPeriod);
+        AnnualReturns annualReturns = fundService.getAnnualReturns(decodedFundName, decodedOperationPeriod);
+
+
+        if (fundNames == null) {
+            throw new ResourceNotFoundException("Fund not found");
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String settingDate = sdf.format(fundNames.getSettingDate());
+
+        model.addAttribute("fundName", fundNames.getFundName());
+        model.addAttribute("operationPeriod", fundNames.getOperationPeriod());
+        model.addAttribute("settingDate", settingDate);
+        model.addAttribute("trustFee", fundNames.getTrustFee());
+        model.addAttribute("operationSize", fundNames.getOperationSize());
+        model.addAttribute("salesMethod", fundNames.getSalesMethod());
+        model.addAttribute("benchmark", fundNames.getBenchmark());
+        model.addAttribute("investmentObjective", fundNames.getInvestmentObjective());
+
+        model.addAttribute("period3M", fundResult != null && fundResult.getPeriod_3M() != null ? fundResult.getPeriod_3M() : "-");
+        model.addAttribute("period6M", fundResult != null && fundResult.getPeriod_6M() != null ? fundResult.getPeriod_6M() : "-");
+        model.addAttribute("period1Y", fundResult != null && fundResult.getPeriod_1Y() != null ? fundResult.getPeriod_1Y() : "-");
+        model.addAttribute("period3Y", fundResult != null && fundResult.getPeriod_3Y() != null ? fundResult.getPeriod_3Y() : "-");
+        model.addAttribute("period5Y", fundResult != null && fundResult.getPeriod_5Y() != null ? fundResult.getPeriod_5Y() : "-");
+        model.addAttribute("bmPeriod3M", fundResult != null && fundResult.getBm_Period_3M() != null ? fundResult.getBm_Period_3M() : "-");
+        model.addAttribute("bmPeriod6M", fundResult != null && fundResult.getBm_Period_6M() != null ? fundResult.getBm_Period_6M() : "-");
+        model.addAttribute("bmPeriod1Y", fundResult != null && fundResult.getBm_Period_1Y() != null ? fundResult.getBm_Period_1Y() : "-");
+        model.addAttribute("bmPeriod3Y", fundResult != null && fundResult.getBm_Period_3Y() != null ? fundResult.getBm_Period_3Y() : "-");
+        model.addAttribute("bmPeriod5Y", fundResult != null && fundResult.getBm_Period_5Y() != null ? fundResult.getBm_Period_5Y() : "-");
+
+        model.addAttribute("annualReturns", annualReturns);
 
         return "report_template";
     }
 }
+

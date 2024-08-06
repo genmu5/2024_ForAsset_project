@@ -2,31 +2,44 @@ package com.example._2024_for_asset_spring.entity.report;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "Fund_Names")
-public class FundNames {
+import java.util.Date;
 
+@Entity
+@Table(name = "fund_names")
+public class FundNames {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Fund_Name_ID")
-    private Integer fundNameId;
+    private Integer fundId;
 
-    @Column(name = "Fund_Name")
+    @Column(nullable = false)
     private String fundName;
 
-    @Column(name = "Operation_Period")
+    @Column(nullable = false)
     private String operationPeriod;
 
-    @Column(name = "Fund_Code")
-    private String fundCode;
+    @Column(nullable = false)
+    private Date settingDate;
 
-    // Getters and setters
-    public Integer getFundNameId() {
-        return fundNameId;
+    @Column(nullable = false)
+    private String trustFee;
+
+    @Column(nullable = false)
+    private String operationSize;
+
+    @Column(nullable = false)
+    private String salesMethod;
+
+    private String benchmark;
+
+    private String investmentObjective;
+
+    // Getters and Setters
+    public Integer getFundId() {
+        return fundId;
     }
 
-    public void setFundNameId(Integer fundNameId) {
-        this.fundNameId = fundNameId;
+    public void setFundId(Integer fundId) {
+        this.fundId = fundId;
     }
 
     public String getFundName() {
@@ -45,11 +58,52 @@ public class FundNames {
         this.operationPeriod = operationPeriod;
     }
 
-    public String getFundCode() {
-        return fundCode;
+    public Date getSettingDate() {
+        return settingDate;
     }
 
-    public void setFundCode(String fundCode) {
-        this.fundCode = fundCode;
+    public void setSettingDate(Date settingDate) {
+        this.settingDate = settingDate;
     }
+
+    public String getTrustFee() {
+        return trustFee;
+    }
+
+    public void setTrustFee(String trustFee) {
+        this.trustFee = trustFee;
+    }
+
+    public String getOperationSize() {
+        return operationSize;
+    }
+
+    public void setOperationSize(String operationSize) {
+        this.operationSize = operationSize;
+    }
+
+    public String getSalesMethod() {
+        return salesMethod;
+    }
+
+    public void setSalesMethod(String salesMethod) {
+        this.salesMethod = salesMethod;
+    }
+
+    public String getBenchmark() {
+        return benchmark;
+    }
+
+    public void setBenchmark(String benchmark) {
+        this.benchmark = benchmark;
+    }
+
+    public String getInvestmentObjective() {
+        return investmentObjective;
+    }
+
+    public void setInvestmentObjective(String investmentObjective) {
+        this.investmentObjective = investmentObjective;
+    }
+
 }
