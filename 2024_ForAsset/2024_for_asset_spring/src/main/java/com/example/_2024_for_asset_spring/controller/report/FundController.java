@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 @Controller
@@ -33,6 +34,10 @@ public class FundController {
         FundNames fundNames = fundService.getFundNames(decodedFundName, decodedOperationPeriod);
         FundResult fundResult = fundService.getFundResult(decodedFundName, decodedOperationPeriod);
         AnnualReturns annualReturns = fundService.getAnnualReturns(decodedFundName, decodedOperationPeriod);
+        List<ClassPriceStatus> classPriceStatusList = fundService.getClassPriceStatusByFundNameAndOperationPeriod(decodedFundName, decodedOperationPeriod);
+        List<MarketStatus> marketStatusList = fundService.getMarketStatusByFundNameAndOperationPeriod(decodedFundName, decodedOperationPeriod);
+        OperationPlan operationPlan = fundService.getOperationPlan(decodedFundName, decodedOperationPeriod);
+        OperationResults operationResults = fundService.getOperationResults(decodedFundName, decodedOperationPeriod);
 
         if (fundNames == null) {
             throw new ResourceNotFoundException("Fund not found");
@@ -63,6 +68,15 @@ public class FundController {
 
         model.addAttribute("annualReturns", annualReturns);
 
+        model.addAttribute("fundtype", fundOverview.getFundType());
+        model.addAttribute("settingDate", fundOverview.getSettingDate());
+        model.addAttribute("risklevel", fundOverview.getRiskLevel());
+
+        model.addAttribute("classPriceStatusList", classPriceStatusList);
+
+        model.addAttribute("marketStatusList", marketStatusList);
+        model.addAttribute("planDetails", operationPlan.getPlanDetails());
+        model.addAttribute("commentary", operationResults.getCommentary());
         return templateName;
     }
 }
