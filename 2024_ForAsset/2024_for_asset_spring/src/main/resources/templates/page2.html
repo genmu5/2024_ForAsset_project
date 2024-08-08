@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>펀드 보고서</title>
     <style>
         @page {
@@ -10,7 +10,7 @@
             margin: 20mm;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: "NanumBarunGothic";
             color: #333;
             background-color: #f8f8f8;
             margin: 0;
@@ -81,12 +81,6 @@
         .performance-summary .performance-value {
             font-size: 26px;
             color: #e0a423;
-        }
-        .footer {
-            background-color: #F3F3F3;
-            font-size: 11px;
-            padding: 10px 20px;
-            box-sizing: border-box;
         }
         .footer p {
             margin: 5px 0;
@@ -208,7 +202,7 @@
                             <th>5년</th>
                         </tr>
                         <tr>
-                        <td>펀드</td>
+                            <td>펀드</td>
                             <td th:text="${period3M}">-</td>
                             <td th:text="${period6M}">-</td>
                             <td th:text="${period1Y}">-</td>
@@ -259,7 +253,7 @@
             <div class="asset-content">
                 <div class="asset-box">
                     <h3>자산구성현황</h3>
-                    <img alt="자산구성현황 차트">
+                    <img alt="자산구성현황 차트" />
                 </div>
                 <div class="asset-box">
                     <h3>업종구성 (상위 10개)</h3>
@@ -273,8 +267,8 @@
         </div>
     </div>
     <div class="footer-logo">
-        <hr>
-        <img th:src="@{/image/로고.jfif}" alt="KB 자산운용 로고">
+        <hr />
+        <img  src="/static/image/로고.jfif" alt="KB 자산운용 로고"/>
     </div>
 </div>
 </body>

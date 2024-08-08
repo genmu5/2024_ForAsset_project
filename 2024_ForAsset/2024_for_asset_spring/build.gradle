@@ -49,6 +49,17 @@ dependencies {
 	//html
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+	//PDF
+	implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.10'
+	implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
+	implementation 'com.itextpdf:itext7-core:7.2.1'
+	implementation 'com.itextpdf:html2pdf:4.0.1'
+	implementation 'com.lowagie:itext:2.1.7'
+	implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
 }
 
 tasks.named('test') {

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KB Asset Management Fund Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+    body {
+      color: #333;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: "NanumBarunGothic";
+    }
+    .container {
+      width: 210mm;
+      height: 297mm;
+      background-color: #fff;
+      padding: 20mm;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #e6e6e6;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .header .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff8c00;
+    }
+    .header .fund-title {
+      font-size: 18px;
+      color: #726350;
+    }
+    .content h1 {
+      font-size: 16px;
+      color: #333;
+      margin-top: 0;
+    }
+    .content h2 {
+      font-size: 14px;
+      color: #726350;
+      margin-bottom: 5px;
+    }
+    .content p {
+      font-size: 12px;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      margin-bottom: 10px;
+    }
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 4px;
+      text-align: left;
+    }
+    th {
+      background-color: #90877E;
+      color: white;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .footer-logo hr {
+      flex-grow: 1;
+      border: none;
+      height: 5px;
+      background-color: #726350;
+      margin-right: 10px;
+    }
+    .footer-logo img {
+      height: 35px;
+      width: auto;
+    }
+    .section-title {
+      font-size: 18px;
+      color: #ff8c00;
+      margin: 20px 0 10px;
+      border-bottom: 2px solid #ff8c00;
+      padding-bottom: 5px;
+    }
+    .market-commentary div {
+      width: 48%;
+    }
+    .market-commentary p {
+      font-size: 10px;
+      line-height: 1.4;
+    }
+    .table-extended th:nth-child(1),
+    .table-extended td:nth-child(1) {
+      width: 35%;
+    }
+    .table-extended th:nth-child(2),
+    .table-extended td:nth-child(2) {
+      width: 15%;
+    }
+    .table-extended th:nth-child(3),
+    .table-extended td:nth-child(3) {
+      width: 15%;
+    }
+    .table-extended th:nth-child(4),
+    .table-extended td:nth-child(4) {
+      width: 35%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="title">KB Asset Management Fund Report</div>
+    <div class="fund-title">
+      KB 베트남 포커스 증권 자투자신탁(주식혼합)(H)(운용)
+    </div>
+  </div>
+  <div class="content">
+    <h2 class="section-title">재산현황</h2>
+    <p>
+      펀드의 당기/말기 전기/말 순자산 총액 및 기준가격 증감을 비교하실 수
+      있습니다.
+    </p>
+    <table>
+      <thead>
+      <tr>
+        <th>펀드명</th>
+        <th>당기말</th>
+        <th>전기말</th>
+        <th>증감율</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="marketStatus : ${marketStatusList}">
+        <td>자산총액</td>
+        <td th:text="${marketStatus.assetTotal}">50,252,738,079</td>
+        <td th:text="${marketStatus.assetPrevious}">50,922,091,368</td>
+        <td th:text="${marketStatus.growthRateAsset}">5.61%</td>
+      </tr>
+      <tr th:each="marketStatus : ${marketStatusList}">
+        <td>부채총액</td>
+        <td th:text="${marketStatus.debtPrevious}">99,121,248,049</td>
+        <td th:text="${marketStatus.debtTotal}">143,515,665,571</td>
+        <td th:text="${marketStatus.growthRateDebt}">27.49%</td>
+      </tr>
+      <tr th:each="marketStatus : ${marketStatusList}">
+        <td>순자산총액</td>
+        <td th:text="${marketStatus.netAssetTotal}">50,161,610,050</td>
+        <td th:text="${marketStatus.netAssetPrevious}">52,929,435,975</td>
+        <td th:text="${marketStatus.growthRateNetAsset}">12.40%</td>
+      </tr>
+      <tr th:each="marketStatus : ${marketStatusList}">
+        <td>기준가격</td>
+        <td th:text="${marketStatus.standardPriceCurrent}">1,354.34</td>
+        <td th:text="${marketStatus.standardPricePrevious}">1,538.14</td>
+        <td th:text="${marketStatus.growthRateStandardPrice}">12.04%</td>
+      </tr>
+      </tbody>
+    </table>
+    <h2 class="section-title">KB Asset Management Fund Report</h2>
+    <table>
+      <thead>
+      <tr>
+        <th colspan="2">종류(Class)</th>
+        <th>전기말</th>
+        <th>당기말</th>
+        <th>증감율</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="fund : ${classPriceStatusList}">
+        <td colspan="2" th:text="${fund.fundName}">펀드명</td>
+        <td th:text="${fund.previousPrice}">전기말</td>
+        <td th:text="${fund.currentPrice}">당기말</td>
+        <td th:text="${fund.changePercentage}">증감율</td>
+      </tr>
+      </tbody>
+    </table>
+    <h2 class="section-title">02. 운용결과 및 수익률 현황</h2>
+    <h2>운용성과와 투자환경 및 운용계획</h2>
+    <p>
+      최근 시장 현황 및 향후 펀드 운용 계획에 대한 매니저의 코멘트 입니다.
+    </p>
+    <table>
+      <thead>
+      <tr>
+        <th>시장 현황 및 운용결과</th>
+        <th>향후 운용계획</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <div th:text="${planDetails}">
+            운용기간 중 베트남 주식시장은 전년 12월 시작된 상승세가 이어지며
+            호치민 지수 기준 +13.8% 상승하였고, 펀드가 주로 투자한 호치민 상장
+            상위 종목들은 평균 이상의 상승률을 기록하였습니다. 다만, 전반적인
+            매출 성장에도 불구하고 일부 대형 종목들은 하락을 기록하였으며,
+            이로 인해 펀드 성과는 상대적으로 저조하였습니다. 운용기간 동안
+            추가 매수를 진행하였으며, 시장의 변동성을 고려하여 보유 종목의
+            리밸런싱을 지속적으로 진행하였습니다.
+          </div>
+        </td>
+        <td>
+          <div th:text="${commentary}">
+            작년 12월 시작된 상승세가 지속되며 Fitch가 베트남 신용등급을 BB+로
+            한 단계 상향 조정한 점은 향후 긍정적인 영향을 미칠 것으로
+            예상됩니다. 베트남 동화의 안정적인 환율 유지와 더불어 투자자들의
+            신뢰가 높아졌으며, 주요 종목들의 실적 성장세도 지속되고 있습니다.
+            다만, 글로벌 경제 불확실성과 무역 이슈는 여전히 위험 요소로
+            작용하고 있습니다. 이에 따라 펀드는 주기적인 리밸런싱과 철저한
+            리스크 관리를 통해 안정적인 운용 성과를 목표로 하고 있습니다.
+            향후 운용 계획은 시장의 흐름을 지속적으로 모니터링하며, 베트남
+            동화의 안정적인 환율 유지와 더불어 주요 종목들의 실적 성장세를
+            주시할 것입니다. 또한, 글로벌 경제 불확실성과 무역 이슈에 대비하여
+            철저한 리스크 관리를 통해 안정적인 운용 성과를 목표로 하고
+            있습니다. 펀드는 주기적인 리밸런싱과 철저한 리스크 관리를 통해
+            안정적인 운용 성과를 목표로 하고 있습니다.
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer-logo">
+    <hr/>
+    <img  src="/static/image/로고.jfif" alt="KB 자산운용 로고" />
+  </div>
+</div>
+</body>
+</html>

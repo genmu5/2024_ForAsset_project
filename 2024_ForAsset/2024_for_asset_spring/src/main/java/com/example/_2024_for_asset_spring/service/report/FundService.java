@@ -21,6 +21,18 @@ public class FundService {
     @Autowired
     private AnnualReturnsRepository annualReturnsRepository;
 
+    @Autowired
+    private ClassPriceStatusRepository classPriceStatusRepository;
+
+    @Autowired
+    private MarketStatusRepository marketRepository;
+
+    @Autowired
+    private OperationPlanRepository operationPlanRepository;
+
+    @Autowired
+    private OperationResultsRepository operationResultsRepository;
+
     public FundOverview getFundOverview(String fundName, String operationPeriod) {
         return fundOverviewRepository.findByFundNameAndOperationPeriod(fundName, operationPeriod)
                 .orElse(null);
@@ -38,6 +50,24 @@ public class FundService {
 
     public AnnualReturns getAnnualReturns(String fundName, String operationPeriod) {
         return annualReturnsRepository.findByFundNameAndOperationPeriod(fundName, operationPeriod)
+                .orElse(null);
+    }
+
+    public List<ClassPriceStatus> getClassPriceStatusByFundNameAndOperationPeriod(String fundName, String operationPeriod) {
+        return classPriceStatusRepository.findClassPriceStatus(fundName, operationPeriod);
+    }
+
+    public List<MarketStatus> getMarketStatusByFundNameAndOperationPeriod(String fundName, String operationPeriod) {
+        return marketRepository.findByFundNameAndOperationPeriod(fundName, operationPeriod);
+    }
+
+    public OperationPlan getOperationPlan(String fundName, String operationPeriod) {
+        return operationPlanRepository.findByFundNameAndOperationPeriod(fundName, operationPeriod)
+                .orElse(null);
+    }
+
+    public OperationResults getOperationResults(String fundName, String operationPeriod) {
+        return operationResultsRepository.findByFundNameAndOperationPeriod(fundName,operationPeriod)
                 .orElse(null);
     }
 

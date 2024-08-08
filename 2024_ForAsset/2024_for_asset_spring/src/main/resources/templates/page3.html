@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KB Asset Management Fund Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+    body {
+      font-family: "NanumBarunGothic";
+      color: #333;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 210mm;
+      height: 297mm;
+      background-color: #fff;
+      padding: 15mm;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #e6e6e6;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .header .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff8c00;
+    }
+    .header .fund-title {
+      font-size: 18px;
+      color: #726350;
+    }
+    .content h1 {
+      font-size: 16px;
+      color: #333;
+      margin-top: 0;
+    }
+    .content h2 {
+      font-size: 14px;
+      color: #726350;
+      margin-bottom: 5px;
+    }
+    .content p {
+      font-size: 12px;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 18px;
+      color: #ff8c00;
+      margin: 20px 0 10px;
+      border-bottom: 2px solid #ff8c00;
+      padding-bottom: 5px;
+    }
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 4px;
+      text-align: left;
+    }
+    th {
+      background-color: #90877E;
+      color: white;
+    }
+    .footer {
+      font-size: 8px;
+      color: #777;
+    }
+    .footer p {
+      font-size: 10px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .footer-logo hr {
+      flex-grow: 1;
+      border: none;
+      height: 5px;
+      background-color: #726350;
+      margin-right: 10px;
+    }
+    .footer-logo img {
+      height: 35px;
+      width: auto;
+    }
+    .table-extended th:nth-child(1),
+    .table-extended td:nth-child(1) {
+      width: 15%;
+    }
+    .table-extended th:nth-child(2),
+    .table-extended td:nth-child(2) {
+      width: 15%;
+    }
+    .table-extended th:nth-child(3),
+    .table-extended td:nth-child(3) {
+      width: 15%;
+    }
+    .table-extended th:nth-child(4),
+    .table-extended td:nth-child(4) {
+      width: 35%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="title">KB Asset Management Fund Report</div>
+    <div class="fund-title" th:text="${fundName}">
+      KB 베트남 포커스 증권 자투자신탁(주식혼합)(H)(운용)
+    </div>
+  </div>
+  <div class="content">
+    <h2 class="section-title">기본정보</h2>
+    <p>펀드의 기본사항을 확인하실 수 있습니다.</p>
+    <table class="table-extended">
+      <thead>
+      <tr>
+        <th>펀드명</th>
+        <th>금융투자협회 펀드코드</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${classPriceStatusList}">
+        <td th:text="${item.fundName}">펀드명</td>
+        <td th:text="${item.className}">클래스명</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <table class="table-extended">
+      <tbody>
+      <tr>
+        <th>펀드의 종류</th>
+        <td colspan="3">
+          주식형, 혼합형(채권혼합형, 주가연계형, 종류형, 모자형)
+        </td>
+      </tr>
+      <tr>
+        <th>위험등급</th>
+        <td th:text="${risklevel}">2등급 (높은 위험)</td>
+        <th>종류(클래스)</th>
+        <td>해당사항 없음</td>
+      </tr>
+      <tr>
+        <th>설정일</th>
+        <td th:text="${settingDate}">2007-06-01</td>
+        <th>운용기간</th>
+        <td th:text="${operationPeriod}">(2023.12.01 ~ 2024.02.29)</td>
+      </tr>
+      <tr>
+        <th>기준가격</th>
+        <td>운용기간 동안 업데이트 됩니다.</td>
+        <th>판매회사</th>
+        <td>KB자산운용</td>
+      </tr>
+      <tr>
+        <th>환매수수료</th>
+        <td>없음</td>
+        <th>운용보수</th>
+        <td>자문형</td>
+      </tr>
+      <tr>
+        <th>펀드판매회사</th>
+        <td>중앙신용협동조합 (HSBC은행)</td>
+        <th>운용사</th>
+        <td>KB자산운용</td>
+      </tr>
+      <tr>
+        <th>상환일</th>
+        <td>운용기간 종료 후 6개월 이내</td>
+        <th>자산운용</th>
+        <td>자본시장과 금융투자업에 관한 법률</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="footer">
+      <p th:text="${investmentObjective}">
+        이 투자신탁은 베트남 주식형 투자신탁이며 KB 베트남 포커스 증권
+        모투자신탁(주식) 및 KB 베트남 QVM 증권 모투자신탁(주식)에 주로
+        투자하고, 국내 시장가 기준으로 운용됩니다. 이 상품은 투자신탁입니다.
+        주식형이며 다양한 만기와 수익률 선택이 가능한 증권형 펀드입니다.
+      </p>
+      <p>
+        투자자는 자본시장과 금융투자업에 관한 법률에 따라 펀드설명서와
+        투자설명서를 참고하여 펀드 가입을 결정할 수 있습니다. 펀드의
+        자산운용보고서는 자본시장과 금융투자업에 관한 법률에 의거
+        자산운용사가 작성하며, 투자자가 가입한 금융 상품의 투자행위가 종료된
+        후 3개월 이내의 자산운용에 대한 결과를 요약하여 작성하는
+        보고서입니다.
+      </p>
+      <p>
+        펀드의 투자는 예금자 보호법에 따라 예금 보험공사가 보호하지 않으며,
+        원금 손실이 발생할 수 있습니다. 투자자는 투자 전에 펀드설명서를
+        확인하시기 바랍니다.
+      </p>
+      <p>
+        본 자료는 투자 권유를 목적으로 하지 않으며, 집합투자증권의 판매,
+        매수, 환매에 관한 권유나 제안을 포함하지 않습니다.
+      </p>
+      <p>
+        ※ 본 자료에 대한 자세한 사항은 금융감독원 홈페이지
+        [http://www.fss.or.kr], 자본시장협회 홈페이지
+        [http://www.kofia.or.kr], 자산운용사 홈페이지
+        [http://www.kbam.co.kr]에서 확인하실 수 있습니다.
+      </p>
+      <div class="footer-logo">
+        <hr />
+        <img  src="/static/image/로고.jfif" alt="KB 자산운용 로고" />
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
