@@ -1,24 +1,26 @@
 package com.example._2024_for_asset_spring.entity.report;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Entity
 @Table(name = "class_price_status")
+@IdClass(ClassPriceStatusId.class)
 public class ClassPriceStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Fund_ID;
 
+    @Id
+    @Column(name = "Fund_ID")
+    private Integer fundID;
+
+    @Id
     @Column(name = "Fund_Name")
     private String fundName;
 
+    @Id
     @Column(name = "Operation_Period")
     private String operationPeriod;
 
+    @Id
     @Column(name = "Class_Name")
     private String className;
 
@@ -31,13 +33,14 @@ public class ClassPriceStatus {
     @Column(name = "Change_Percentage")
     private BigDecimal changePercentage;
 
+    // Getters and setters
 
-    public Integer getFund_ID() {
-        return Fund_ID;
+    public Integer getFundID() {
+        return fundID;
     }
 
-    public void setFund_ID(Integer fund_ID) {
-        Fund_ID = fund_ID;
+    public void setFundID(Integer fundID) {
+        this.fundID = fundID;
     }
 
     public String getFundName() {
@@ -88,4 +91,16 @@ public class ClassPriceStatus {
         this.changePercentage = changePercentage;
     }
 
+    @Override
+    public String toString() {
+        return "ClassPriceStatus{" +
+                "fundID=" + fundID +
+                ", fundName='" + fundName + '\'' +
+                ", operationPeriod='" + operationPeriod + '\'' +
+                ", className='" + className + '\'' +
+                ", previousPrice=" + previousPrice +
+                ", currentPrice=" + currentPrice +
+                ", changePercentage=" + changePercentage +
+                '}';
+    }
 }

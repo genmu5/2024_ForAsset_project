@@ -22,7 +22,7 @@ public class FundService {
     private AnnualReturnsRepository annualReturnsRepository;
 
     @Autowired
-    private ClassPriceStatusRepository repository;
+    private ClassPriceStatusRepository classPriceStatusRepository;
 
     @Autowired
     private MarketStatusRepository marketRepository;
@@ -54,7 +54,7 @@ public class FundService {
     }
 
     public List<ClassPriceStatus> getClassPriceStatusByFundNameAndOperationPeriod(String fundName, String operationPeriod) {
-        return repository.findByFundNameAndOperationPeriod(fundName, operationPeriod);
+        return classPriceStatusRepository.findClassPriceStatus(fundName, operationPeriod);
     }
 
     public List<MarketStatus> getMarketStatusByFundNameAndOperationPeriod(String fundName, String operationPeriod) {
