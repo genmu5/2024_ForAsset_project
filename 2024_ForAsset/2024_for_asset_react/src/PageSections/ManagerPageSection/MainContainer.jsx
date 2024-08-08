@@ -84,7 +84,7 @@ const VerticalDivider = styled.div`
 const MainContainer = () => {
     const [chatData, setChatData] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [report, setReport] = useState("");
+    const [reportHtml, setReportHtml] = useState("");
     const [message, setMessage] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
@@ -132,7 +132,6 @@ const MainContainer = () => {
                 updatedChatData[selectedIndex].messages.push({ text: message, type: "user" });
                 updatedChatData[selectedIndex].messages.push({ text: data, type: "bot" });
                 setChatData(updatedChatData);
-                setReport(data); // Assume the report is the response for simplicity
                 saveData(updatedChatData);
             })
             .catch(error => {
@@ -151,43 +150,18 @@ const MainContainer = () => {
         saveData(updatedChatData);
     };
 
-    const handleComplete = () => {
-        const currentChat = chatData[selectedIndex];
-        const requestData = {
-            title: currentChat.title,
-            fundName: currentChat.fundName,
-            period: currentChat.period
-        };
-
-        fetch('http://localhost:8080/api/generateReport', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.report) {
-                    setReport(data.report);
-                    const updatedChatData = [...chatData];
-                    updatedChatData[selectedIndex].report = data.report;
-                    setChatData(updatedChatData);
-                    saveData(updatedChatData);
-                } else {
-                    console.error('Failed to generate report:', data);
-                }
-            })
-            .catch(error => {
-                console.error('Error generating report:', error);
-            });
+    const handleComplete = (fundName, period) => {
+        fetch(`/fund-report?fundName=${encodeURIComponent(fundName)}&operationPeriod=${encodeURIComponent(period)}`)
+            .then(response => response.text())
+            .then(html => setReportHtml(html))
+            .catch(error => console.error('Error generating report:', error));
     };
 
     const handleItemClick = (index) => {
         setSelectedIndex(index);
         setMessage("");
         const selectedChat = chatData[index];
-        setReport(selectedChat.report || "");
+        setReportHtml(selectedChat.report || "");
         if (showModal) {
             setShowModal(false);
             document.removeEventListener('click', handleOutsideClick, true);
@@ -295,13 +269,13 @@ const MainContainer = () => {
                                     setChatData(updatedChatData);
                                     saveData(updatedChatData);
                                 }}
-                                onComplete={handleComplete}
+                                onComplete={(fundName, period) => handleComplete(fundName, period)}
                             />
                         )}
                     </SectionContainer>
                     <VerticalDivider />
                     <SectionContainer>
-                        <ReportContainer answer={report} />
+                        <ReportContainer reportHtml={reportHtml} />
                     </SectionContainer>
                 </MainContent>
             </InnerContainer>
@@ -316,5 +290,3 @@ const MainContainer = () => {
 }
 
 export default MainContainer;
-// KB 올에셋 AI 솔루션 EMP 증권 자투자신탁(혼합-재간접형)(UH)(운용)
-// 2024.03.01~2024.05.31

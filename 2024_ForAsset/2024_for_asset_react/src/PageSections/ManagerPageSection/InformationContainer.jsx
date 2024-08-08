@@ -66,20 +66,17 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
     const [message, setMessage] = useState("");
 
     const handleCompleteClick = () => {
-        fetch('/api/generateReport', {
+        const params = new URLSearchParams({
+            fundName,
+            period,
+        }).toString();
+
+        fetch(`/fund-report?${params}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title,
-                fundName,
-                period,
-            }),
         })
-            .then(response => response.json())
-            .then(data => {
-                onComplete(data.report);
+            .then(response => response.text())
+            .then(reportHtml => {
+                onComplete(reportHtml);
                 setMessage("보고서 생성을 완료했습니다!");
             })
             .catch(error => {
@@ -92,7 +89,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
         <Container>
             <TitleInput
                 type="text"
-                placeholder="Title 입력란 입니다. 임의로 작성했어요. 여기에 채팅 제목을 입력할 예정입니다."
+                placeholder="Title 입력란 입니다."
                 value={title}
                 onChange={(e) => onTitleChange(e.target.value)}
             />
@@ -112,6 +109,6 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             {message && <Message>{message}</Message>}
         </Container>
     );
-};
+}
 
 export default InformationContainer;

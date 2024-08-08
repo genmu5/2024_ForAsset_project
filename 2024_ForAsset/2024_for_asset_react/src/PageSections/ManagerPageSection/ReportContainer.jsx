@@ -17,26 +17,12 @@ const Container = styled.div`
 const HTMLContainer = styled.div`
     width: 100%;
     height: 100%;
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
 `;
 
-const ReportContainer = ({ answer }) => {
-    const createMarkup = () => {
-        return { __html: answer };
-    };
-
-    // Debugging purpose
-    console.log('Report content:', answer);
-
+const ReportContainer = ({ reportHtml }) => {
     return (
         <Container>
-            <HTMLContainer>
-                <iframe srcDoc={answer}></iframe>
-            </HTMLContainer>
+            <HTMLContainer dangerouslySetInnerHTML={{ __html: reportHtml }} />
         </Container>
     );
 };

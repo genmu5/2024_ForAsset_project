@@ -95,7 +95,7 @@ public class FundController {
             String renderedHtml = templateEngine.process(templateName, context);
 
             // 파일로 저장
-            File outputFile = new File("C:\\Users\\User\\Desktop\\2024_ForAsset_project\\2024_ForAsset\\2024_for_asset_spring\\src\\main\\resources\\report", fundNames.getFundName()+ " " + templateName + ".html");
+            File outputFile = new File("C:\\Users\\OWNER\\Desktop\\2024_ForAsset_project\\2024_ForAsset\\2024_for_asset_spring\\src\\main\\resources\\report", fundNames.getFundName()+ " " + templateName + ".html");
             try (FileWriter writer = new FileWriter(outputFile)) {
                 writer.write(renderedHtml);
             }
