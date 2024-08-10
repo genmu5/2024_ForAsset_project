@@ -261,7 +261,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
                             onClick={() => handleNewsItemClick(index)}
                         >
                             <h3>{summary.title}</h3>
-                            <p>{summary.summary}</p> {/* summary 필드 사용 */}
+                            <p style={{lineHeight: "1.2"}}>{summary.summary}</p> {/* summary 필드 사용 */}
                             <small>{summary.publishedAt}</small>
                         </NewsItem>
                     ))}
@@ -272,7 +272,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             {planMessage && (
                 <StyledResultItem>
                     <h3>운용 계획</h3>
-                    <p>{planMessage}</p>
+                    <p style={{lineHeight: "1.2"}}>{planMessage}</p>
                 </StyledResultItem>
             )}
 
@@ -280,7 +280,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             {resultMessage && (
                 <StyledResultItem>
                     <h3>운용 결과</h3>
-                    <p>{resultMessage}</p>
+                    <p style={{lineHeight: "1.2"}}>{resultMessage}</p>
                 </StyledResultItem>
             )}
 

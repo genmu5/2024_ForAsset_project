@@ -66,6 +66,8 @@ const FooterContainer = styled.div`
 `;
 
 const Template1 = styled(ReportContainer)`
+    display: flex;
+    flex-direction: column;
     .header {
         display: flex;
         justify-content: space-between;
@@ -107,21 +109,12 @@ const Template1 = styled(ReportContainer)`
         width: 300px;
     }
     .report-title .report {
-        font-size: 30px;
+        font-size: 20px;
         color: #e0a423;
-    }
-    .report-icon {
-        width: 80%;
-        height: 80%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 auto;
     }
     .report-icon img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
     }
     .icon-image {
         margin-top: 20px;
@@ -334,16 +327,23 @@ const ReportTemplate = ({ data }) => {
                 allowTaint: true,
             });
             const imgData = canvas.toDataURL('image/png');
-            const pdfWidth = 210;
-            const pdfHeight = 297;
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+            const pdfWidth = 210; // A4 width in mm
+            const pdfHeight = 297; // A4 height in mm
+            const imgWidth = canvas.width * 0.264583; // Convert px to mm (1px = 0.264583mm)
+            const imgHeight = canvas.height * 0.264583;
+
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+            const width = imgWidth * ratio;
+            const height = imgHeight * ratio;
+
+            // Calculate x and y positions to center the image
+            const x = (pdfWidth - width) / 2;
+            const y = (pdfHeight - height) / 2;
 
             if (addPage) {
                 pdf.addPage();
             }
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth * ratio, imgHeight * ratio);
+            pdf.addImage(imgData, 'PNG', x, 0, width, height);
         };
 
         await addTemplateToPdf(reportRef1);
@@ -360,7 +360,7 @@ const ReportTemplate = ({ data }) => {
                 <Template1>
                     <div className="header">
                         <div className="title-group">
-                            <h1>{data.fundName}</h1>
+                            <h1 style={{fontSize: "25px", color: "#726350", fontWeight: "bold"}}>{data.fundName}</h1>
                         </div>
                     </div>
                     <div className="report-title">
@@ -371,12 +371,14 @@ const ReportTemplate = ({ data }) => {
                             자산운용 보고서
                         </div>
                     </div>
-                    <div className="report-icon">
+                    <div className="report-icon" style={{width:" 100%", height: "100%", flex: "1", display: "flex", justifyContent: "start", alignItems: "start"}}>
                         <img src={icon} alt="Report Icon" />
                     </div>
                     <FooterContainer>
-                        <div className="footer-content">
+                        <div className="footer-content"
+                            style={{display: "flex", flexDirection: "column", background: "#e6e6e6", padding: "10px", fontSize: "13px", lineHeight: "1.5"}}>
                             <span>이 상품은 투자신탁입니다. 단위채권형이며, <br/>다양한 만기와 수익률 선택이 가능한 증권형 펀드입니다.</span>
+                            <br/>
                             <span>자산운용보고서는 자본시장과 금융투자업에 관한 법률에 의거 자산운용사가 작성하며, <br/>투자자가 가입한 금융 상품의 투자행위가 종료된 후 3개월 이내의 자산운용에 대한 결과를 요약하여 작성하는 보고서입니다.</span>
                         </div>
                         <hr color="#e0a423" size="5" />
@@ -393,7 +395,8 @@ const ReportTemplate = ({ data }) => {
                         <div className="title">KB Asset Management Fund Report</div>
                         <div className="fund-title">{data.fundName}</div>
                     </div>
-                    <div className="summary-section">
+                    <div className="summary-section"
+                        style={{display: "flex", flexDirection: "column", gap: "5px", marginBottom: "5px"}}>
                         <h2>펀드개요</h2>
                         <p>{data.investmentObjective}</p>
                         <table>
@@ -417,7 +420,8 @@ const ReportTemplate = ({ data }) => {
                             </tbody>
                         </table>
                     </div>
-                    <div className="summary-section">
+                    <div className="summary-section"
+                         style={{display: "flex", flexDirection: "column", gap: "5px", marginBottom: "5px"}}>
                         <h2>펀드운용성과</h2>
                         <div className="performance-summary">
                             <div className="left">
@@ -666,10 +670,10 @@ const ReportTemplate = ({ data }) => {
                             <tbody>
                             <tr>
                                 <td>
-                                    <div>{data.planDetails}</div>
+                                    <div style={{lineHeight: "1.2"}}>{data.planDetails}</div>
                                 </td>
                                 <td>
-                                    <div>{data.commentary}</div>
+                                    <div style={{lineHeight: "1.2"}}>{data.commentary}</div>
                                 </td>
                             </tr>
                             </tbody>
