@@ -3,9 +3,9 @@ import styled from "styled-components";
 import SideBarContainer from "../../components/SideBarContainer";
 import UserProfile from "../../components/UserProfile";
 import InformationContainer from "../ManagerPageSection/InformationContainer";
-import ReportContainer from "../ManagerPageSection/ReportContainer";
+import ReportTemplate from "./ReportTemplate";  // ReportTemplate 컴포넌트 import
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
-import logo from '../../images/logo.png'; // Import the logo image
+import logo from '../../images/logo.png';
 
 const Container = styled.div`
     width: 100vw;
@@ -13,7 +13,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #F5F5F5;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden; /* 스크롤 방지 */
 `;
 
 const Header = styled.div`
@@ -24,13 +24,13 @@ const Header = styled.div`
     padding: 10px 20px;
     background-color: #FFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Full width */
-    box-sizing: border-box; /* Include padding in width calculation */
+    width: 100%; /* 전체 너비 */
+    box-sizing: border-box; /* 패딩을 너비 계산에 포함 */
 `;
 
 const Logo = styled.img`
     height: 40px;
-    margin-left: 20px; /* Add margin to move the logo to the right */
+    margin-left: 20px; /* 로고를 오른쪽으로 이동하기 위한 여백 */
 `;
 
 const HeaderRight = styled.div`
@@ -71,8 +71,8 @@ const SectionContainer = styled.div`
     flex-direction: column;
     background-color: #F5F5F5;
     padding: 20px;
-    overflow-y: auto;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    overflow-y: auto; /* 수직 스크롤 활성화 */
+    overflow-x: hidden; /* 수평 스크롤 비활성화 */
 `;
 
 const VerticalDivider = styled.div`
@@ -84,21 +84,22 @@ const VerticalDivider = styled.div`
 const MainContainer = () => {
     const [chatData, setChatData] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [reportHtml, setReportHtml] = useState("");
+    const [reportData, setReportData] = useState(null);
     const [message, setMessage] = useState("");
+    const [keyword, setKeyword] = useState(""); // 키워드 상태 추가
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
 
     useEffect(() => {
-        // Load initial data from JSON file
+        // 초기 데이터를 JSON 파일에서 로드
         fetch('/api/chats')
             .then(response => response.json())
-            .then(data => setChatData(Array.isArray(data) ? data : [])) // 데이터가 배열인지 확인 후 설정
-            .catch(error => console.error('Error loading data:', error));
+            .then(data => setChatData(Array.isArray(data) ? data : []))
+            .catch(error => console.error('데이터 로드 중 오류:', error));
     }, []);
 
     const saveData = (data) => {
-        // Save data to JSON file on the server
+        // 데이터를 서버에 있는 JSON 파일로 저장
         fetch('/api/chats', {
             method: 'POST',
             headers: {
@@ -108,7 +109,7 @@ const MainContainer = () => {
         })
             .then(response => response.text())
             .then(result => console.log(result))
-            .catch(error => console.error('Error saving data:', error));
+            .catch(error => console.error('데이터 저장 중 오류:', error));
     };
 
     const handleSendMessage = () => {
@@ -135,7 +136,7 @@ const MainContainer = () => {
                 saveData(updatedChatData);
             })
             .catch(error => {
-                console.error('Error submitting data:', error);
+                console.error('데이터 전송 중 오류:', error);
                 const updatedChatData = [...chatData];
                 updatedChatData[selectedIndex].messages.push({ text: "서버에서 답변을 가져오는 중 오류가 발생했습니다.", type: "bot" });
                 setChatData(updatedChatData);
@@ -151,20 +152,27 @@ const MainContainer = () => {
     };
 
     const handleComplete = (fundName, period) => {
-        fetch(`/fund-report?fundName=${encodeURIComponent(fundName)}&operationPeriod=${encodeURIComponent(period)}`)
-            .then(response => response.text())
-            .then(html => setReportHtml(html))
-            .catch(error => console.error('Error generating report:', error));
+        if (!fundName || !period) {
+            alert("펀드명과 운용 기간을 입력하세요.");
+            return;
+        }
+
+        fetch(`http://localhost:8080/api/fund-report?fundName=${encodeURIComponent(fundName)}&operationPeriod=${encodeURIComponent(period)}`)
+            .then(response => response.json())
+            .then(data => setReportData(data))
+            .catch(error => console.error('리포트 데이터 로드 중 오류:', error));
     };
 
     const handleItemClick = (index) => {
         setSelectedIndex(index);
         setMessage("");
         const selectedChat = chatData[index];
-        setReportHtml(selectedChat.report || "");
-        if (showModal) {
-            setShowModal(false);
-            document.removeEventListener('click', handleOutsideClick, true);
+        setReportData(null);
+        if (selectedChat.fundName && selectedChat.period) {
+            fetch(`/api/fund-report?fundName=${encodeURIComponent(selectedChat.fundName)}&operationPeriod=${encodeURIComponent(selectedChat.period)}`)
+                .then(response => response.json())
+                .then(data => setReportData(data))
+                .catch(error => console.error('리포트 데이터 로드 중 오류:', error));
         }
     };
 
@@ -231,8 +239,8 @@ const MainContainer = () => {
                 <Logo src={logo} alt="Logo" />
                 <HeaderRight>
                     <UserProfile />
-                    <Button>Log out</Button>
-                    <Button>Help</Button>
+                    <Button>로그아웃</Button>
+                    <Button>도움말</Button>
                 </HeaderRight>
             </Header>
             <InnerContainer>
@@ -269,13 +277,20 @@ const MainContainer = () => {
                                     setChatData(updatedChatData);
                                     saveData(updatedChatData);
                                 }}
-                                onComplete={(fundName, period) => handleComplete(fundName, period)}
+                                keyword={keyword} // 키워드 추가
+                                setKeyword={setKeyword} // 키워드 상태 변경
+                                onComplete={handleComplete}  // 생성 버튼이 눌리면 이 함수가 호출됨
                             />
                         )}
                     </SectionContainer>
                     <VerticalDivider />
                     <SectionContainer>
-                        <ReportContainer reportHtml={reportHtml} />
+                        {selectedIndex !== null && chatData[selectedIndex] && reportData && (
+                            <ReportTemplate
+                                data={reportData}
+                                templateId={selectedIndex + 1}  // Assuming each index corresponds to a template
+                            />
+                        )}
                     </SectionContainer>
                 </MainContent>
             </InnerContainer>
@@ -287,6 +302,6 @@ const MainContainer = () => {
             )}
         </Container>
     );
-}
+};
 
 export default MainContainer;
