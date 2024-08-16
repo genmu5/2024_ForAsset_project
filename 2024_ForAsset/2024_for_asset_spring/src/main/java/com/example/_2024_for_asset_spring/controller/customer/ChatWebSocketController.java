@@ -1,7 +1,7 @@
 package com.example._2024_for_asset_spring.controller.customer;
 
 import com.example._2024_for_asset_spring.dto.customer.SendMessageRequestDto;
-import com.example._2024_for_asset_spring.entity.ChatMessage;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatMessage;
 import com.example._2024_for_asset_spring.service.customer.ChatMessageService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

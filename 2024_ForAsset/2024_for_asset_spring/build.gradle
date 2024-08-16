@@ -45,7 +45,7 @@ dependencies {
 	//OAuth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	//mysql
-	runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 	//html
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.apache.pdfbox:pdfbox:2.0.24'

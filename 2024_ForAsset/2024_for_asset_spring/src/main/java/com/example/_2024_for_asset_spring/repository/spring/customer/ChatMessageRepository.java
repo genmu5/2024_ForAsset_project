@@ -1,6 +1,6 @@
-package com.example._2024_for_asset_spring.repository.customer;
+package com.example._2024_for_asset_spring.repository.spring.customer;
 
-import com.example._2024_for_asset_spring.entity.ChatMessage;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

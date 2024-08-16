@@ -2,7 +2,9 @@ package com.example._2024_for_asset_spring.service.spring.report;
 
 
 import com.example._2024_for_asset_spring.entity.spring.report.*;
-import com.example._2024_for_asset_spring.repository.primary.report.*;
+import com.example._2024_for_asset_spring.repository.spring.report.*;
+import com.example._2024_for_asset_spring.repository.spring.*;
+import com.example._2024_for_asset_spring.repository.spring.report.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

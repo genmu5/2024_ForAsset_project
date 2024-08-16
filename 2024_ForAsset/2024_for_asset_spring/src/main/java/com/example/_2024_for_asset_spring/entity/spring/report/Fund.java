@@ -1,4 +1,4 @@
-package com.example._2024_for_asset_spring.entity;
+package com.example._2024_for_asset_spring.entity.spring.report;
 
 import jakarta.persistence.*;
 

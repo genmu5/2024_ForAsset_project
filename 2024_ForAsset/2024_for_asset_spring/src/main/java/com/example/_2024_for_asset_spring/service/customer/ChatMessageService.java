@@ -1,11 +1,11 @@
 package com.example._2024_for_asset_spring.service.customer;
 
-import com.example._2024_for_asset_spring.entity.ChatMessage;
-import com.example._2024_for_asset_spring.entity.ChatRoom;
-import com.example._2024_for_asset_spring.entity.auth.Member;
-import com.example._2024_for_asset_spring.repository.customer.ChatMessageRepository;
-import com.example._2024_for_asset_spring.repository.customer.ChatRoomRepository;
-import com.example._2024_for_asset_spring.repository.auth.MemberRepository;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatMessage;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
+import com.example._2024_for_asset_spring.entity.spring.auth.Member;
+import com.example._2024_for_asset_spring.repository.spring.customer.ChatMessageRepository;
+import com.example._2024_for_asset_spring.repository.spring.customer.ChatRoomRepository;
+import com.example._2024_for_asset_spring.repository.spring.auth.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

@@ -1,6 +1,6 @@
-package com.example._2024_for_asset_spring.repository.auth;
+package com.example._2024_for_asset_spring.repository.spring.auth;
 
-import com.example._2024_for_asset_spring.entity.auth.Certification;
+import com.example._2024_for_asset_spring.entity.spring.auth.Certification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

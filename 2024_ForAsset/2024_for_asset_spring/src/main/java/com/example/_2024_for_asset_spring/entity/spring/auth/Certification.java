@@ -1,4 +1,4 @@
-package com.example._2024_for_asset_spring.entity.auth;
+package com.example._2024_for_asset_spring.entity.spring.auth;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

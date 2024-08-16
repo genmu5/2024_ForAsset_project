@@ -1,9 +1,9 @@
 package com.example._2024_for_asset_spring.service.customer;
 
-import com.example._2024_for_asset_spring.entity.ChatRoom;
-import com.example._2024_for_asset_spring.entity.auth.Member;
-import com.example._2024_for_asset_spring.repository.customer.ChatRoomRepository;
-import com.example._2024_for_asset_spring.repository.auth.MemberRepository;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
+import com.example._2024_for_asset_spring.entity.spring.auth.Member;
+import com.example._2024_for_asset_spring.repository.spring.customer.ChatRoomRepository;
+import com.example._2024_for_asset_spring.repository.spring.auth.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

@@ -1,8 +1,8 @@
 package com.example._2024_for_asset_spring.service.auth;
 
-import com.example._2024_for_asset_spring.entity.auth.CustomOAuthUser;
-import com.example._2024_for_asset_spring.entity.auth.Member;
-import com.example._2024_for_asset_spring.repository.auth.MemberRepository;
+import com.example._2024_for_asset_spring.entity.spring.auth.CustomOAuthUser;
+import com.example._2024_for_asset_spring.entity.spring.auth.Member;
+import com.example._2024_for_asset_spring.repository.spring.auth.MemberRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

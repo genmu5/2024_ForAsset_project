@@ -1,6 +1,6 @@
 package com.example._2024_for_asset_spring.controller;
 
-import com.example._2024_for_asset_spring.entity.FundPerformance;
+import com.example._2024_for_asset_spring.entity.spring.report.FundPerformance;
 import com.example._2024_for_asset_spring.service.FundPerformanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

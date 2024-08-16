@@ -3,7 +3,7 @@ package com.example._2024_for_asset_spring.service.spring.report;
 import com.example._2024_for_asset_spring.dto.spring.GptRequest;
 import com.example._2024_for_asset_spring.dto.spring.GptResponse;
 import com.example._2024_for_asset_spring.entity.spring.report.OperationPlan;
-import com.example._2024_for_asset_spring.repository.primary.report.OperationPlanRepository;
+import com.example._2024_for_asset_spring.repository.spring.report.OperationPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

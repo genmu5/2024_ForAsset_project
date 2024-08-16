@@ -1,7 +1,7 @@
 package com.example._2024_for_asset_spring.controller.customer;
 
 import com.example._2024_for_asset_spring.dto.customer.CreateChatRoomRequestDto;
-import com.example._2024_for_asset_spring.entity.ChatRoom;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
 import com.example._2024_for_asset_spring.service.customer.ChatRoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

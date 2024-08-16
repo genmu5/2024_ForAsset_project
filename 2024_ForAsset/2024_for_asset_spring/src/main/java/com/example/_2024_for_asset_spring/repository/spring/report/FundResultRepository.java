@@ -1,4 +1,4 @@
-package com.example._2024_for_asset_spring.repository.primary.report;
+package com.example._2024_for_asset_spring.repository.spring.report;
 import com.example._2024_for_asset_spring.entity.spring.report.FundResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
