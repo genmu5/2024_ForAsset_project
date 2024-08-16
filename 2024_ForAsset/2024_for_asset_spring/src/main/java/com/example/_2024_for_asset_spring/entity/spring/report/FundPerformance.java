@@ -1,4 +1,4 @@
-package com.example._2024_for_asset_spring.entity.spring.report;
+package com.example._2024_for_asset_spring.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public class FundPerformance {
     @Column(name = "price", nullable = false)
     private String price;
 
-    @Column(name = "'change'", nullable = false)
+    @Column(name = "change_value", nullable = false)
     private String change;
 
     @Column(name = "percent", nullable = false)
