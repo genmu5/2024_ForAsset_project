@@ -1,6 +1,6 @@
 package com.example._2024_for_asset_spring.service;
 
-import com.example._2024_for_asset_spring.entity.spring.report.FundPerformance;
+import com.example._2024_for_asset_spring.entity.spring.FundPerformance;
 import com.example._2024_for_asset_spring.repository.spring.FundPerformanceRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

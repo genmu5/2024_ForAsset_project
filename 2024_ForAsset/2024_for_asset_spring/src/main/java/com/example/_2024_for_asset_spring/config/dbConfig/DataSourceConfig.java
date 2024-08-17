@@ -24,7 +24,7 @@ public class DataSourceConfig {
     @Bean(name = "primaryDataSource")
     public DataSource primaryDataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://ec2-15-165-253-20.ap-northeast-2.compute.amazonaws.com:3306/KB?serverTimezone=UTC");
+        config.setJdbcUrl("jdbc:mysql://ec2-15-165-253-20.ap-northeast-2.compute.amazonaws.com:3306/fund?serverTimezone=UTC");
         config.setUsername("forasset");
         config.setPassword("1234");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");

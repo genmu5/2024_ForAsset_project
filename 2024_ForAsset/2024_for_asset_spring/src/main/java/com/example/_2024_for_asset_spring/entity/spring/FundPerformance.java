@@ -1,13 +1,14 @@
-package com.example._2024_for_asset_spring.entity;
+package com.example._2024_for_asset_spring.entity.spring;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "fund_performance", schema = "fund")
 public class FundPerformance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
