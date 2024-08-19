@@ -7,7 +7,7 @@ import DeleteConfirmationModal from "./DeleteConfirmationModal";
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    width: 300px; /* Adjusted width */
+    width: 300px;
     height: 100%;
     background-color: #FFFFFF;
     border-radius: 10px;
@@ -24,7 +24,7 @@ const ContentContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow-y: auto; /* Scrollable content */
+    overflow-y: auto;
     margin-top: 20px;
 `;
 
@@ -38,11 +38,18 @@ const SearchInput = styled.input`
     font-size: 16px;
 `;
 
-const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, onBookmarkToggle, selectedIndex }) => {
+const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, selectedIndex }) => {
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
-    const [menuOpenIndex, setMenuOpenIndex] = useState(null); // Current open menu index
+    const [menuOpenIndex, setMenuOpenIndex] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [filteredChatData, setFilteredChatData] = useState(chatData);
+
+    useEffect(() => {
+        setFilteredChatData(chatData.filter(chat =>
+            chat.title.toLowerCase().includes(searchQuery.toLowerCase())
+        ));
+    }, [searchQuery, chatData]);
 
     const handleNewChatClick = () => {
         onNewChatClick();
@@ -77,26 +84,16 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewCha
         setMenuOpenIndex(index);
     };
 
+    const handleBookmarkToggle = (index) => {
+        const updatedChatData = filteredChatData.map((chat, idx) =>
+            idx === index ? { ...chat, bookmarked: !chat.bookmarked } : chat
+        );
+        setFilteredChatData(updatedChatData);
+    };
+
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
-
-    const filteredTitles = chatData.filter(chat =>
-        chat.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (menuOpenIndex !== null) {
-                setMenuOpenIndex(null);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [menuOpenIndex]);
 
     return (
         <Container onClick={(e) => e.stopPropagation()}>
@@ -113,12 +110,13 @@ const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewCha
             </FixedHeader>
             <ContentContainer>
                 <SideBarListContainer
-                    contents={filteredTitles}
+                    contents={filteredChatData}
                     selectedIndex={selectedIndex}
                     menuOpenIndex={menuOpenIndex}
                     onItemClick={handleItemClick}
                     onItemRemove={handleItemRemove}
                     onToggleMenu={toggleMenu}
+                    onBookmarkToggle={handleBookmarkToggle}
                 />
                 {showModal && (
                     <DeleteConfirmationModal
