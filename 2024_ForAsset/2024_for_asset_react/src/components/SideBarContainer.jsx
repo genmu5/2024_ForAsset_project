@@ -38,7 +38,7 @@ const SearchInput = styled.input`
     font-size: 16px;
 `;
 
-const SideBarContainer = ({ mainTitle, ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, selectedIndex }) => {
+const SideBarContainer = ({ ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, selectedIndex }) => {
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
     const [menuOpenIndex, setMenuOpenIndex] = useState(null);
