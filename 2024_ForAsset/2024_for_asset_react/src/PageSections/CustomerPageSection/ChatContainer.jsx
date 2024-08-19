@@ -12,7 +12,7 @@ const Container = styled.div`
 `;
 
 const ChatContainer = () => {
-    const email = "testemail";
+    const email = "asd";
     const chatRoomId = 1;
 
     return (

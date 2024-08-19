@@ -24,7 +24,7 @@ const CustomerPage = () => {
     return (
         <Container>
             <InnerContainer>
-                <SideBarContainer mainTitle={"ForAssetCustomer"} ButtonBackGroundColor={"#F08D86"} />
+                {/*<SideBarContainer mainTitle={"ForAssetCustomer"} ButtonBackGroundColor={"#F08D86"} />*/}
                 <ChatContainer />
                 <InformationContainer />
             </InnerContainer>
