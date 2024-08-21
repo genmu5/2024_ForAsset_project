@@ -38,7 +38,7 @@ const SearchInput = styled.input`
     font-size: 16px;
 `;
 
-const SideBarContainer = ({ ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, selectedIndex }) => {
+const SideBarContainer = ({ ButtonBackGroundColor, chatData, onNewChatClick, onItemClick, onRemoveChat, onBookmarkToggle, selectedIndex }) => {
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
     const [menuOpenIndex, setMenuOpenIndex] = useState(null);
@@ -85,10 +85,7 @@ const SideBarContainer = ({ ButtonBackGroundColor, chatData, onNewChatClick, onI
     };
 
     const handleBookmarkToggle = (index) => {
-        const updatedChatData = filteredChatData.map((chat, idx) =>
-            idx === index ? { ...chat, bookmarked: !chat.bookmarked } : chat
-        );
-        setFilteredChatData(updatedChatData);
+        onBookmarkToggle(index);
     };
 
     const handleSearchChange = (e) => {

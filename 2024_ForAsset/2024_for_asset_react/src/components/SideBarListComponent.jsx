@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import bookmark_filled_star from "../images/bookmark_filled_star.png"; // Bookmark filled star icon image
-import bookmark_empty_star from "../images/bookmark_empty_star.png"; // Bookmark empty star icon image
-import more_icon from "../images/more_icon.png"; // More icon image
+import bookmark_filled_star from "../images/bookmark_filled_star.png";
+import bookmark_empty_star from "../images/bookmark_empty_star.png";
+import more_icon from "../images/more_icon.png";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const Container = styled.div`
@@ -20,18 +20,18 @@ const ListContainer = styled.div`
     border-radius: 10px;
     width: 100%;
     height: 40px;
-    background-color: ${props => (props.isSelected || props.isMenuOpen ? "#F0F0F0" : "transparent")}; // Change background color for selected and menu open items
+    background-color: ${props => (props.isSelected || props.isMenuOpen ? "#F0F0F0" : "transparent")};
     cursor: pointer;
-    position: relative; // For menu positioning
+    position: relative;
 `;
 
 const Icon = styled.img`
     width: 23px;
     height: 23px;
-    cursor: pointer; // Change cursor to pointer
+    cursor: pointer;
     &:hover {
-        transform: scale(1.01); // Scale on hover
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Shadow on hover
+        transform: scale(1.01);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 `;
 
@@ -96,7 +96,7 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (componentRef.current && !componentRef.current.contains(event.target)) {
-                onToggleMenu(null); // Close menu
+                onToggleMenu(null);
             }
         };
 
@@ -129,5 +129,3 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
 }
 
 export default SideBarListComponent;
-
-//                    <MenuItem onClick={(e) => { e.stopPropagation(); /* TODO: 제목 수정 기능 추가 */ }}>제목 수정</MenuItem>

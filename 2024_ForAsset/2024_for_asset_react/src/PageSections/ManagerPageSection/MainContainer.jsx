@@ -3,7 +3,7 @@ import styled from "styled-components";
 import SideBarContainer from "../../components/SideBarContainer";
 import UserProfile from "../../components/UserProfile";
 import InformationContainer from "../ManagerPageSection/InformationContainer";
-import ReportTemplate from "./ReportTemplate";  // ReportTemplate 컴포넌트 import
+import ReportTemplate from "./ReportTemplate";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import logo from '../../images/logo.png';
 
@@ -13,7 +13,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #F5F5F5;
-    overflow: hidden; /* 스크롤 방지 */
+    overflow: hidden;
 `;
 
 const Header = styled.div`
@@ -24,13 +24,13 @@ const Header = styled.div`
     padding: 10px 20px;
     background-color: #FFF;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%; /* 전체 너비 */
-    box-sizing: border-box; /* 패딩을 너비 계산에 포함 */
+    width: 100%;
+    box-sizing: border-box;
 `;
 
 const Logo = styled.img`
     height: 40px;
-    margin-left: 20px; /* 로고를 오른쪽으로 이동하기 위한 여백 */
+    margin-left: 20px;
 `;
 
 const HeaderRight = styled.div`
@@ -71,8 +71,8 @@ const SectionContainer = styled.div`
     flex-direction: column;
     background-color: #F5F5F5;
     padding: 20px;
-    overflow-y: auto; /* 수직 스크롤 활성화 */
-    overflow-x: hidden; /* 수평 스크롤 비활성화 */
+    overflow-y: auto;
+    overflow-x: hidden;
 `;
 
 const VerticalDivider = styled.div`
@@ -86,12 +86,11 @@ const MainContainer = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [reportData, setReportData] = useState(null);
     const [message, setMessage] = useState("");
-    const [keyword, setKeyword] = useState(""); // 키워드 상태 추가
+    const [keyword, setKeyword] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [indexToRemove, setIndexToRemove] = useState(null);
 
     useEffect(() => {
-        // 초기 데이터를 JSON 파일에서 로드
         fetch('/api/chats')
             .then(response => response.json())
             .then(data => setChatData(Array.isArray(data) ? data : []))
@@ -99,7 +98,6 @@ const MainContainer = () => {
     }, []);
 
     const saveData = (data) => {
-        // 데이터를 서버에 있는 JSON 파일로 저장
         fetch('/api/chats', {
             method: 'POST',
             headers: {
@@ -120,7 +118,6 @@ const MainContainer = () => {
 
         setMessage("");
 
-        // 서버로 메시지 보내기
         fetch(`http://localhost:8080/chat?message=${encodeURIComponent(message)}`, {
             method: 'GET',
             headers: {
@@ -146,7 +143,10 @@ const MainContainer = () => {
 
     const handleTitleChange = (index, newTitle) => {
         const updatedChatData = [...chatData];
-        updatedChatData[index].title = newTitle;
+        updatedChatData[index] = {
+            ...updatedChatData[index],
+            title: newTitle,
+        };
         setChatData(updatedChatData);
         saveData(updatedChatData);
     };
@@ -182,7 +182,7 @@ const MainContainer = () => {
             fundName: "",
             period: "",
             messages: [],
-            report: ""
+            bookmarked: false,
         };
         const updatedChatData = [newChat, ...chatData];
         setChatData(updatedChatData);
@@ -193,13 +193,20 @@ const MainContainer = () => {
     const handleRemoveChat = (index) => {
         const updatedChatData = chatData.filter((_, i) => i !== index);
         setChatData(updatedChatData);
-        setSelectedIndex(null);
+        if (selectedIndex === index) {
+            setSelectedIndex(null);
+        } else if (selectedIndex > index) {
+            setSelectedIndex(selectedIndex - 1);
+        }
         saveData(updatedChatData);
     };
 
     const handleBookmarkToggle = (index) => {
         const updatedChatData = [...chatData];
-        updatedChatData[index].bookmarked = !updatedChatData[index].bookmarked;
+        updatedChatData[index] = {
+            ...updatedChatData[index],
+            bookmarked: !updatedChatData[index].bookmarked,
+        };
         setChatData(updatedChatData);
         saveData(updatedChatData);
     };
@@ -277,9 +284,9 @@ const MainContainer = () => {
                                     setChatData(updatedChatData);
                                     saveData(updatedChatData);
                                 }}
-                                keyword={keyword} // 키워드 추가
-                                setKeyword={setKeyword} // 키워드 상태 변경
-                                onComplete={handleComplete}  // 생성 버튼이 눌리면 이 함수가 호출됨
+                                keyword={keyword}
+                                setKeyword={setKeyword}
+                                onComplete={handleComplete}
                             />
                         )}
                     </SectionContainer>
@@ -288,7 +295,7 @@ const MainContainer = () => {
                         {selectedIndex !== null && chatData[selectedIndex] && reportData && (
                             <ReportTemplate
                                 data={reportData}
-                                templateId={selectedIndex + 1}  // Assuming each index corresponds to a template
+                                templateId={selectedIndex + 1}
                             />
                         )}
                     </SectionContainer>
