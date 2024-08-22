@@ -66,7 +66,164 @@ const CompleteButton = styled.button`
     }
 `;
 
-const InformationContainer = ({ title, onTitleChange, fundName, setFundName, period, setPeriod, keyword, setKeyword, onComplete }) => {
+const NewsListContainer = styled.div`
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+const NewsItem = styled.div`
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: ${props => props.isSelected ? "#d3f4ff" : "white"};
+    box-shadow: ${props => props.isSelected ? "0 0 10px rgba(0, 0, 0, 0.2)" : "none"};
+    cursor: pointer;
+
+    &:hover {
+        background-color: #f0f8ff;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    p {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+
+    small {
+        font-size: 12px;
+        color: #777;
+    }
+`;
+
+const StyledResultItem = styled.div`
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    p {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+`;
+
+const InformationContainer = ({ title, onTitleChange, fundName, setFundName, period, setPeriod, onComplete }) => {
+    const [keyword, setKeyword] = useState("");  // 키워드 상태 추가
+    const [newsSummaries, setNewsSummaries] = useState([]);  // 전체 뉴스 리스트 상태
+    const [selectedNewsIndices, setSelectedNewsIndices] = useState([]); // 선택된 뉴스 인덱스 상태 추가
+    const [planMessage, setPlanMessage] = useState(""); // 운용 계획 메시지 상태 추가
+    const [resultMessage, setResultMessage] = useState(""); // 운용 결과 메시지 상태 추가
+
+    const handleCompleteClick = () => {
+        // 기간을 '-' 형식으로 변환
+        const [startDate, endDate] = period.split("~").map(date => {
+            return date.trim().replace(/\./g, '-'); // '.'을 '-'로 변환
+        });
+
+        fetch(`/news-summaries?keyword=${encodeURIComponent(keyword)}&startDate=${encodeURIComponent(startDate)}T00:00:00&endDate=${encodeURIComponent(endDate)}T23:59:59`, {
+            method: 'GET',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(newsData => {
+                // 기존 선택된 뉴스 인덱스를 업데이트
+                const updatedNewsSummaries = [...newsSummaries, ...newsData];
+                setNewsSummaries(updatedNewsSummaries);
+            })
+            .catch(error => {
+                console.error('뉴스 요약 가져오기 중 오류:', error);
+            });
+    };
+
+    const handleNewsItemClick = (index) => {
+        if (selectedNewsIndices.includes(index)) {
+            // 이미 선택된 경우 선택 해제
+            setSelectedNewsIndices(selectedNewsIndices.filter(i => i !== index));
+        } else {
+            // 선택되지 않은 경우 선택 추가
+            setSelectedNewsIndices([...selectedNewsIndices, index]);
+        }
+    };
+
+    const handleGeneratePlanClick = () => {
+        const selectedSummaries = newsSummaries.filter((_, index) => selectedNewsIndices.includes(index));
+
+        const requestData = {
+            fundName,
+            operationPeriod: period,
+            newsSummaries: selectedSummaries.map(summary => summary.summary), // summary만 추출
+        };
+
+        fetch('http://localhost:8080/funds/generate-plan', {  // 백엔드 API 경로로 수정
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.text())
+            .then(planDetails => {
+                setPlanMessage(planDetails);  // 운용 계획 메시지 설정
+            })
+            .catch(error => {
+                console.error('운용 계획 생성 중 오류:', error);
+                setPlanMessage("운용 계획 생성 중 오류가 발생했습니다.");
+            });
+    };
+
+    const handleGenerateResultsClick = () => {
+        const selectedSummaries = newsSummaries.filter((_, index) => selectedNewsIndices.includes(index));
+
+        const requestData = {
+            fundName,
+            operationPeriod: period,
+            newsSummaries: selectedSummaries.map(summary => summary.summary), // summary만 추출
+        };
+
+        fetch('http://localhost:8080/funds/generate-results', {  // 백엔드 API 경로로 수정
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.text())
+            .then(results => {
+                setResultMessage(results);  // 운용 결과 메시지 설정
+            })
+            .catch(error => {
+                console.error('운용 결과 생성 중 오류:', error);
+                setResultMessage("운용 결과 생성 중 오류가 발생했습니다.");
+            });
+    };
+
+    // 추가: 운용 계획 및 결과를 바탕으로 보고서 생성
+    const handleGenerateReportClick = () => {
+        if (planMessage && resultMessage) {
+            onComplete(fundName, period);
+        } else {
+            alert("운용 계획 및 결과를 먼저 생성하세요.");
+        }
+    };
+
     return (
         <Container>
             <TitleInput
@@ -93,11 +250,44 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
             />
-            <CompleteButton onClick={() => onComplete(fundName, period)}>
-                운용 보고서 생성
-            </CompleteButton>
+            <CompleteButton onClick={handleCompleteClick}>뉴스 요약 가져오기</CompleteButton>
+
+            {newsSummaries.length > 0 && (
+                <NewsListContainer>
+                    {newsSummaries.map((summary, index) => (
+                        <NewsItem
+                            key={index}
+                            isSelected={selectedNewsIndices.includes(index)}
+                            onClick={() => handleNewsItemClick(index)}
+                        >
+                            <h3>{summary.title}</h3>
+                            <p style={{lineHeight: "1.2"}}>{summary.summary}</p> {/* summary 필드 사용 */}
+                            <small>{summary.publishedAt}</small>
+                        </NewsItem>
+                    ))}
+                </NewsListContainer>
+            )}
+
+            <CompleteButton onClick={handleGeneratePlanClick}>운용 계획 생성</CompleteButton>
+            {planMessage && (
+                <StyledResultItem>
+                    <h3>운용 계획</h3>
+                    <p style={{lineHeight: "1.2"}}>{planMessage}</p>
+                </StyledResultItem>
+            )}
+
+            <CompleteButton onClick={handleGenerateResultsClick}>운용 결과 생성</CompleteButton>
+            {resultMessage && (
+                <StyledResultItem>
+                    <h3>운용 결과</h3>
+                    <p style={{lineHeight: "1.2"}}>{resultMessage}</p>
+                </StyledResultItem>
+            )}
+
+            {/* 운용 보고서 생성 버튼 추가 */}
+            <CompleteButton onClick={handleGenerateReportClick}>운용 보고서 생성</CompleteButton>
         </Container>
     );
-};
+}
 
 export default InformationContainer;
