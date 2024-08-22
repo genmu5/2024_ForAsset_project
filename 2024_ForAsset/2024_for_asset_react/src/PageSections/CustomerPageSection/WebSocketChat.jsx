@@ -8,18 +8,17 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     background-color: white;
-    margin: 15px 10px;
-    gap: 10px;
-    overflow: hidden;
+    height: 100%;  // 부모 요소의 전체 높이를 차지
+    width: 100%;
 `;
 
 const MessagesContainer = styled.div`
-    flex: 1;
-    overflow-y: scroll;
+    flex-grow: 1;  // 나머지 공간을 모두 차지하도록 설정
     border: 1px solid #ddd;
     background-color: #f9f9f9;
     border-radius: 13px;
     padding: 10px;
+    overflow-y: auto;  // 메시지 영역에만 스크롤 활성화
 `;
 
 const MessageWrapper = styled.div`
@@ -43,13 +42,14 @@ const MessageContent = styled.div`
 const InputContainer = styled.div`
     display: flex;
     gap: 10px;
+    padding: 10px 0;  // 입력창을 약간 위로 띄우기 위한 여백 추가
 `;
 
 const Input = styled.input`
-    flex: 1;
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 10px;
+    flex: 1;
 `;
 
 const Button = styled.button`
@@ -124,11 +124,6 @@ const WebSocketChat = ({ email, chatRoomId }) => {
         };
     }, [chatRoomId]);
 
-
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); // 메시지 컨테이너 끝으로 자동 스크롤
-    }, [messages]);
-
     const sendMessage = () => {
         if (client && isConnected && message.trim()) {
             // 사용자의 메시지를 로컬 상태에 추가
@@ -163,7 +158,6 @@ const WebSocketChat = ({ email, chatRoomId }) => {
                         </MessageContent>
                     </MessageWrapper>
                 ))}
-                <div ref={messagesEndRef} /> {/* 자동 스크롤을 위한 ref */}
             </MessagesContainer>
             <InputContainer>
                 <Input
