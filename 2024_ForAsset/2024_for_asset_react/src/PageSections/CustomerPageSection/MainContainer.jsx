@@ -5,6 +5,7 @@ import UserProfile from "../../components/UserProfile";
 import logo from '../../images/logo.png';
 import InformationContainer from "./InformationContainer";
 import ChatContainer from "./ChatContainer";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 
 const Container = styled.div`
     height: 100vh;
@@ -210,12 +211,12 @@ const MainContainer = () => {
                     </SectionContainer>
                 </MainContent>
             </InnerContainer>
-            {/*{showModal && (*/}
-            {/*    <DeleteConfirmationModal*/}
-            {/*        onConfirm={confirmRemove}*/}
-            {/*        onCancel={cancelRemove}*/}
-            {/*    />*/}
-            {/*)}*/}
+            {showModal && (
+                <DeleteConfirmationModal
+                    onConfirm={confirmRemove}
+                    onCancel={cancelRemove}
+                />
+            )}
         </Container>
     );
 };
