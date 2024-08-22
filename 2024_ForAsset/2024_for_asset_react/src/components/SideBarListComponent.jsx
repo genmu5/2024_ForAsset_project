@@ -81,16 +81,8 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
 
     const handleRemoveClick = (e) => {
         e.stopPropagation();
-        setShowModal(true);
-    };
-
-    const handleConfirmRemove = () => {
         onRemove();
-        setShowModal(false);
-    };
-
-    const handleCancelRemove = () => {
-        setShowModal(false);
+        setShowModal(false); // 모듈창 닫기
     };
 
     useEffect(() => {
@@ -123,7 +115,7 @@ const SideBarListComponent = ({ content, isSelected, isMenuOpen, onClick, onRemo
                     <MenuItem onClick={handleRemoveClick}>내역 삭제</MenuItem>
                 </Menu>
             </ListContainer>
-            {showModal && <DeleteConfirmationModal onConfirm={handleConfirmRemove} onCancel={handleCancelRemove} />}
+            {showModal && <DeleteConfirmationModal onConfirm={handleRemoveClick} onCancel={() => setShowModal(false)} />}
         </Container>
     );
 }

@@ -214,34 +214,21 @@ const MainContainer = () => {
     const showDeleteModal = (index) => {
         setIndexToRemove(index);
         setShowModal(true);
-        document.addEventListener('click', handleOutsideClick, true);
     };
 
     const confirmRemove = () => {
         handleRemoveChat(indexToRemove);
         setShowModal(false);
         setIndexToRemove(null);
-        document.removeEventListener('click', handleOutsideClick, true);
     };
 
     const cancelRemove = () => {
         setShowModal(false);
         setIndexToRemove(null);
-        document.removeEventListener('click', handleOutsideClick, true);
-    };
-
-    const handleOutsideClick = (event) => {
-        if (showModal && !event.target.closest('.modal-content')) {
-            cancelRemove();
-        }
     };
 
     return (
-        <Container onClick={() => {
-            if (showModal) {
-                cancelRemove();
-            }
-        }}>
+        <Container>
             <Header>
                 <Logo src={logo} alt="Logo" />
                 <HeaderRight>

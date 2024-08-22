@@ -67,21 +67,16 @@ const SideBarContainer = ({ ButtonBackGroundColor, chatData, onNewChatClick, onI
     const confirmRemove = () => {
         onRemoveChat(indexToRemove);
         setShowModal(false);
-        setIndexToRemove(null);
-        if (selectedIndex === indexToRemove) {
-            onItemClick(null);
-        } else if (selectedIndex > indexToRemove) {
-            onItemClick(selectedIndex - 1);
-        }
+        setMenuOpenIndex(null); // 모듈창 닫기
     };
 
     const cancelRemove = () => {
         setShowModal(false);
-        setIndexToRemove(null);
+        setMenuOpenIndex(null); // 모듈창 닫기
     };
 
     const toggleMenu = (index) => {
-        setMenuOpenIndex(index);
+        setMenuOpenIndex(menuOpenIndex === index ? null : index);
     };
 
     const handleBookmarkToggle = (index) => {
