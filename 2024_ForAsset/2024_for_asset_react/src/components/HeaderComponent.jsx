@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../logo.svg";
+import logo from "../images/logo.png";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../security/AuthContext";
 
@@ -84,6 +84,7 @@ const HeaderComponent = () => {
                     <TextWrapper>
                         <p>개인회원</p>
                         <p>기업회원</p>
+                        <p>도움말</p>
                     </TextWrapper>
                     {!authContext.isAuthenticated &&
                         <ButtonWrapper>

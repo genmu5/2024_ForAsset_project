@@ -39,20 +39,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             //authorization이 없거나 bearer토큰이 아니면
             String token = parseBearerToken(request);
-            if(token == null) {
+            if (token == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             String email = jwtProvider.validate(token);
-            if(email == null) {
+            if (email == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             //user정보 꺼내오기
             Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
-            if(memberOptional.isPresent()) {
+            if (memberOptional.isPresent()) {
                 Member member = memberOptional.get();
                 String role = member.getRole().toString(); // role : ROLE_USER, ROLE_ADMIN 접두사 붙여줘야함
 
@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -86,10 +86,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
 
         boolean hasAuthorization = StringUtils.hasText(authorization);
-        if(!hasAuthorization) return null;
+        if (!hasAuthorization) return null;
 
         boolean isBearer = authorization.startsWith("Bearer ");
-        if(!isBearer) return null;
+        if (!isBearer) return null;
 
         String token = authorization.substring(7);
         return token;

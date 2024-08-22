@@ -51,5 +51,26 @@ public class JwtProvider {
             return null;
         }
     }
+
+    // 토큰에서 이메일 추출
+    public String getEmailFromToken(String jwt) {
+        Claims claims = getClaimsFromToken(jwt);
+        return claims != null ? claims.getSubject() : null;
+    }
+
+    // 토큰에서 클레임 추출
+    private Claims getClaimsFromToken(String jwt) {
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(jwt)
+                    .getBody();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
 }
 

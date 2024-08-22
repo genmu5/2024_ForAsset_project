@@ -5,6 +5,7 @@ import UserProfile from "../../components/UserProfile";
 import logo from '../../images/logo.png';
 import InformationContainer from "./InformationContainer";
 import ChatContainer from "./ChatContainer";
+import HeaderComponent from "../../components/HeaderComponent";
 
 const Container = styled.div`
     height: 100vh;
@@ -181,14 +182,7 @@ const MainContainer = () => {
                 cancelRemove();
             }
         }}>
-            <Header>
-                <Logo src={logo} alt="Logo" />
-                <HeaderRight>
-                    <UserProfile />
-                    <Button>로그아웃</Button>
-                    <Button>도움말</Button>
-                </HeaderRight>
-            </Header>
+            <HeaderComponent/>
             <InnerContainer>
                 <SideBarContainer
                     mainTitle={"ForAssetManager"}
