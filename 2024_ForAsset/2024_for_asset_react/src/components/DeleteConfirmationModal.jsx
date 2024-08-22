@@ -37,7 +37,7 @@ const DeleteConfirmationModal = ({ onConfirm, onCancel }) => {
     return (
         <ModalOverlay>
             <ModalContent className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <p>내역을 삭제하시겠습니까?</p>
+                <p>채팅 내역을 삭제하시겠습니까?</p>
                 <ModalButton onClick={onConfirm}>네</ModalButton>
                 <ModalButton onClick={onCancel}>아니요</ModalButton>
             </ModalContent>
