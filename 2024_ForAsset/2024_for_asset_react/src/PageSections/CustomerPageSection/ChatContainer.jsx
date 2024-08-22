@@ -5,19 +5,16 @@ import WebSocketChat from "./WebSocketChat";
 
 const Container = styled.div`
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    background-color: white;
-    border-radius: 26px;
+    height: 100%;
 `;
 
 const ChatContainer = () => {
     const email = "asd";
-    const chatRoomId = 1;
+    const chatRoomId = 2;
 
     return (
         <Container>
-            <TitleComponent title={"Chat"} />
+            {/*<TitleComponent title={"Chat"} />*/}
             <WebSocketChat email={email} chatRoomId={chatRoomId} />
         </Container>
     );

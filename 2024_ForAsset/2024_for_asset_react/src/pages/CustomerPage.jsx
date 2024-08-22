@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SideBarContainer from "../components/SideBarContainer";
 import ChatContainer from "../PageSections/CustomerPageSection/ChatContainer";
 import InformationContainer from "../PageSections/CustomerPageSection/InformationContainer";
+import MainContainer from "../PageSections/CustomerPageSection/MainContainer";
 
 const Container = styled.div`
     width: 100%;
@@ -22,13 +23,14 @@ const InnerContainer = styled.div`
 
 const CustomerPage = () => {
     return (
-        <Container>
+        <MainContainer />
+        /*<Container>
             <InnerContainer>
-                {/*<SideBarContainer mainTitle={"ForAssetCustomer"} ButtonBackGroundColor={"#F08D86"} />*/}
-                <ChatContainer />
-                <InformationContainer />
+                {/!*<SideBarContainer mainTitle={"ForAssetCustomer"} ButtonBackGroundColor={"#F08D86"} />*!/}
+                {/!*<ChatContainer />*!/}
+                {/!*<InformationContainer />*!/}
             </InnerContainer>
-        </Container>
+        </Container>*/
     );
 }
 

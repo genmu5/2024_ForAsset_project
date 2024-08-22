@@ -6,11 +6,9 @@ import TitleComponent from "../../components/TitleComponent";
 
 const Container = styled.div`
     display: flex;
+    flex: 1;
     flex-direction: column;
-    width: 100%;
     background-color: white;
-    border-radius: 26px;
-    padding: 10px;
     gap: 10px;
 `;
 
@@ -113,8 +111,6 @@ const InformationContainer = () => {
 
     return (
         <Container>
-            <TitleComponent title={"Info"} />
-
             <InfoSection>
                 <InfoTitle>거래 성과 7종</InfoTitle>
                 <InfoList>
