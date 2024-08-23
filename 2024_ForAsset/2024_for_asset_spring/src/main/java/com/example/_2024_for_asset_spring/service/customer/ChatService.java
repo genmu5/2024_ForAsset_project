@@ -23,10 +23,6 @@ public class ChatService {
                 .build();
         chatHistoryRepository.save(chatHistory);
     }
-//
-//    public List<ChatHistory> getChatHistory(String channelId) {
-//        return chatHistoryRepository.findByChannelId(channelId);
-//    }
 
     public List<ChatHistory> getChatHistory(String channelId) {
         return chatHistoryRepository.findByChannelIdOrderByIdAsc(channelId);

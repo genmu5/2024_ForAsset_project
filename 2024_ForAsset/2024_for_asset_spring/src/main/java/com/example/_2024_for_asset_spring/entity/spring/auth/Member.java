@@ -1,10 +1,12 @@
 package com.example._2024_for_asset_spring.entity.spring.auth;
 
 import com.example._2024_for_asset_spring.dto.auth.request.SignUpRequestDto;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatHistory;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -38,6 +40,9 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatHistory> chatHistories;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -47,7 +52,7 @@ public class Member {
     public Member() {
     }
 
-    public Member(Long id, String email, String password, String nickName, Role role, Provider provider, String providerId, String refreshToken, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Member(Long id, String email, String password, String nickName, Role role, Provider provider, String providerId, String refreshToken, List<ChatHistory> chatHistories, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -56,6 +61,7 @@ public class Member {
         this.provider = provider;
         this.providerId = providerId;
         this.refreshToken = refreshToken;
+        this.chatHistories = chatHistories;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

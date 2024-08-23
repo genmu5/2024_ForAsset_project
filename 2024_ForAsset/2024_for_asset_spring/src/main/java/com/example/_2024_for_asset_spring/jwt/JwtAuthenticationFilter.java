@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,50 +36,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            //authorization이 없거나 bearer토큰이 아니면
+            // Authorization 헤더에서 Bearer 토큰을 파싱
             String token = parseBearerToken(request);
             if (token == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // 토큰 유효성 검사
             String email = jwtProvider.validate(token);
             if (email == null) {
-                filterChain.doFilter(request, response);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired JWT token");
                 return;
             }
 
-            //user정보 꺼내오기
+            // 사용자 정보 조회
             Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
             if (memberOptional.isPresent()) {
                 Member member = memberOptional.get();
-                String role = member.getRole().toString(); // role : ROLE_USER, ROLE_ADMIN 접두사 붙여줘야함
+                String role = member.getRole().toString(); // ROLE 접두사 포함
 
-                // ROLE_DEVELOPER, 등등
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(role));
 
-                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-
+                // SecurityContext에 인증 정보 설정
                 AbstractAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(email, null, authorities);
-                // request 에 추가
+                        new UsernamePasswordAuthenticationToken(member, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 securityContext.setAuthentication(authenticationToken);
                 SecurityContextHolder.setContext(securityContext);
 
             } else {
-                filterChain.doFilter(request, response);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not found");
                 return;
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: " + exception.getMessage());
+            return;
         }
 
-        //다음 필터로 넘어감
+        // 다음 필터로 넘어감
         filterChain.doFilter(request, response);
     }
+
 
     private String parseBearerToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");

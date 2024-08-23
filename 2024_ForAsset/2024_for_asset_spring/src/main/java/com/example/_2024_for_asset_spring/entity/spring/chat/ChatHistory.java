@@ -1,5 +1,6 @@
 package com.example._2024_for_asset_spring.entity.spring.chat;
 
+import com.example._2024_for_asset_spring.entity.spring.auth.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,8 @@ public class ChatHistory {
 
     @Column(name = "message")
     private String message;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

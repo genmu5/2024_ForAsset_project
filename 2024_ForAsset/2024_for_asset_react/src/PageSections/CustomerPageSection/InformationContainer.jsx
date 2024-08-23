@@ -9,11 +9,14 @@ const Container = styled.div`
     flex: 1;
     flex-direction: column;
     background-color: white;
-    gap: 10px;
+    gap: 30px;
+    padding: 20px;
 `;
 
 const InfoSection = styled.div`
     flex: 1;
+    display: flex;
+    flex-direction: column;
     background-color: #f5f5f5;
     border-radius: 10px;
     padding: 10px;
@@ -23,18 +26,20 @@ const InfoTitle = styled.h3`
     margin-bottom: 5px;
     font-size: 16px;
     font-weight: bold;
+    padding: 10px;
 `;
 
 const InfoList = styled.ul`
+    flex: 1;
     list-style-type: none;
-    padding: 0;
+    padding: 10px;
     margin: 0;
 `;
 
 const InfoItem = styled.li`
     display: flex;
     justify-content: space-between;
-    padding: 3px 0;
+    padding: 5px 0;
     border-bottom: 1px solid #eee;
     font-size: 14px;
 

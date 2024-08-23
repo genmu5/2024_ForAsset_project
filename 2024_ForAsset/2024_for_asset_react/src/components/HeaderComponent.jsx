@@ -18,7 +18,9 @@ const Container = styled.div`
 const NavWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 1760px;
+    //width: 1760px;
+    width: 100%;
+    padding: 0 30px;
 `;
 
 const Icon = styled.img`

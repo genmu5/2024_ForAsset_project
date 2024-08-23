@@ -1,5 +1,6 @@
 package com.example._2024_for_asset_spring.repository.spring.customer;
 
+import com.example._2024_for_asset_spring.entity.spring.auth.Member;
 import com.example._2024_for_asset_spring.entity.spring.chat.ChatHistory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,5 @@ import java.util.List;
 public interface ChatHistoryRepository extends JpaRepository<ChatHistory, Long> {
     List<ChatHistory> findByChannelId(String channelId);
     List<ChatHistory> findByChannelIdOrderByIdAsc(String channelId);
+    List<ChatHistory> findByMember(Member member);
 }
