@@ -4,12 +4,14 @@ import com.example._2024_for_asset_spring.dto.auth.request.SignUpRequestDto;
 import com.example._2024_for_asset_spring.entity.spring.chat.ChatHistory;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name="member")
 public class Member {
 
@@ -40,6 +42,9 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "oauth2_access_token")
+    private String oauth2AccessToken;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatHistory> chatHistories;
 
@@ -52,7 +57,7 @@ public class Member {
     public Member() {
     }
 
-    public Member(Long id, String email, String password, String nickName, Role role, Provider provider, String providerId, String refreshToken, List<ChatHistory> chatHistories, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Member(Long id, String email, String password, String nickName, Role role, Provider provider, String providerId, String refreshToken, String oauth2AccessToken, List<ChatHistory> chatHistories, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -61,6 +66,7 @@ public class Member {
         this.provider = provider;
         this.providerId = providerId;
         this.refreshToken = refreshToken;
+        this.oauth2AccessToken = oauth2AccessToken;
         this.chatHistories = chatHistories;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -79,7 +85,7 @@ public class Member {
     }
 
     //OAuth2
-    public Member(String email, String provider, String providerId){
+    public Member(String email, String provider, String providerId, String oauth2AccessToken){
         this.email = email;
         this.password = "KakaoPassword";
         this.nickName = "KakaoNickName";
@@ -89,5 +95,6 @@ public class Member {
         this.provider = Provider.valueOf(provider);
         this.providerId = providerId;
         this.refreshToken = null;
+        this.oauth2AccessToken = oauth2AccessToken;
     }
 }

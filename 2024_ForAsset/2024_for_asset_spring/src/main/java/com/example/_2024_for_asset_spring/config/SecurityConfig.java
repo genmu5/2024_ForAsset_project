@@ -21,6 +21,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 
@@ -81,7 +82,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 }
 
 class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {

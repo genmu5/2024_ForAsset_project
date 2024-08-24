@@ -184,16 +184,16 @@ const MainContainer = () => {
         }}>
             <HeaderComponent/>
             <InnerContainer>
-                <SideBarContainer
-                    mainTitle={"ForAssetManager"}
-                    ButtonBackGroundColor={"#4A4A4A"}
-                    chatData={chatData}
-                    onNewChatClick={handleNewChatClick}
-                    onItemClick={handleItemClick}
-                    onRemoveChat={showDeleteModal}
-                    onBookmarkToggle={handleBookmarkToggle}
-                    selectedIndex={selectedIndex}
-                />
+                {/*<SideBarContainer*/}
+                {/*    mainTitle={"ForAssetManager"}*/}
+                {/*    ButtonBackGroundColor={"#4A4A4A"}*/}
+                {/*    chatData={chatData}*/}
+                {/*    onNewChatClick={handleNewChatClick}*/}
+                {/*    onItemClick={handleItemClick}*/}
+                {/*    onRemoveChat={showDeleteModal}*/}
+                {/*    onBookmarkToggle={handleBookmarkToggle}*/}
+                {/*    selectedIndex={selectedIndex}*/}
+                {/*/>*/}
                 <MainContent>
                     <SectionContainer>
                         <ChatContainer/>
