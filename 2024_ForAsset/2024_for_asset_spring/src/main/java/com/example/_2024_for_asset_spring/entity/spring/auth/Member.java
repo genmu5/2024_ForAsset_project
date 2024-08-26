@@ -2,8 +2,12 @@ package com.example._2024_for_asset_spring.entity.spring.auth;
 
 import com.example._2024_for_asset_spring.dto.auth.request.SignUpRequestDto;
 import com.example._2024_for_asset_spring.entity.spring.chat.ChatHistory;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -12,6 +16,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="member")
 public class Member {
 
@@ -46,31 +52,13 @@ public class Member {
     private String oauth2AccessToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatHistory> chatHistories;
+    private List<ChatRoom> chatRooms;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public Member() {
-    }
-
-    public Member(Long id, String email, String password, String nickName, Role role, Provider provider, String providerId, String refreshToken, String oauth2AccessToken, List<ChatHistory> chatHistories, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickName = nickName;
-        this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.refreshToken = refreshToken;
-        this.oauth2AccessToken = oauth2AccessToken;
-        this.chatHistories = chatHistories;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 
     public Member(SignUpRequestDto dto){
         this.email = dto.getEmail();

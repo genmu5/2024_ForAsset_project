@@ -1,13 +1,12 @@
 package com.example._2024_for_asset_spring.entity.spring.chat;
 
 import com.example._2024_for_asset_spring.entity.spring.auth.Member;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +18,9 @@ public class ChatHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "channel_id")
-    private String channelId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
 
     @Column(name = "sender")
     private String sender;
@@ -28,7 +28,4 @@ public class ChatHistory {
     @Column(name = "message")
     private String message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
 }

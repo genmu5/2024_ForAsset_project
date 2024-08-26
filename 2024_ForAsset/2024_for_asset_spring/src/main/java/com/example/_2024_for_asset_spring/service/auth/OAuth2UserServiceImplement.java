@@ -2,20 +2,12 @@ package com.example._2024_for_asset_spring.service.auth;
 
 import com.example._2024_for_asset_spring.entity.spring.auth.CustomOAuthUser;
 import com.example._2024_for_asset_spring.entity.spring.auth.Member;
-import com.example._2024_for_asset_spring.jwt.JwtProvider;
 import com.example._2024_for_asset_spring.repository.spring.auth.MemberRepository;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -27,11 +19,9 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
     private static final Logger logger = LoggerFactory.getLogger(OAuth2UserServiceImplement.class);
 
     private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
 
-    public OAuth2UserServiceImplement(MemberRepository memberRepository, JwtProvider jwtProvider) {
+    public OAuth2UserServiceImplement(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.jwtProvider = jwtProvider;
     }
 
     @Override

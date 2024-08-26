@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import TitleComponent from "../../components/TitleComponent";
 import WebSocketChat from "./WebSocketChat";
 
 const Container = styled.div`
@@ -8,14 +7,10 @@ const Container = styled.div`
     height: 100%;
 `;
 
-const ChatContainer = () => {
-    const email = "asd";
-    const chatRoomId = 2;
-
+const ChatContainer = ({ chatRoom, messages }) => {
     return (
         <Container>
-            {/*<TitleComponent title={"Chat"} />*/}
-            <WebSocketChat email={email} chatRoomId={chatRoomId} />
+            <WebSocketChat email={chatRoom.sender} chatRoomId={chatRoom.id} initialMessages={messages} />
         </Container>
     );
 };

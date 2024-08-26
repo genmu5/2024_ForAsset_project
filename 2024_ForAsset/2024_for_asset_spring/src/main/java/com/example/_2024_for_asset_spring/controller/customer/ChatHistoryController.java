@@ -1,37 +1,74 @@
 package com.example._2024_for_asset_spring.controller.customer;
 
+import com.example._2024_for_asset_spring.dto.customer.ChatMessageResponseDto;
+import com.example._2024_for_asset_spring.dto.customer.ChatRoomResponseDto;
 import com.example._2024_for_asset_spring.entity.spring.auth.Member;
 import com.example._2024_for_asset_spring.entity.spring.chat.ChatHistory;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
 import com.example._2024_for_asset_spring.repository.spring.customer.ChatHistoryRepository;
+import com.example._2024_for_asset_spring.repository.spring.customer.ChatRoomRepository;
 import com.example._2024_for_asset_spring.repository.spring.auth.MemberRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class ChatHistoryController {
 
     private final ChatHistoryRepository chatHistoryRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
 
-    public ChatHistoryController(ChatHistoryRepository chatHistoryRepository, MemberRepository memberRepository) {
+    public ChatHistoryController(ChatHistoryRepository chatHistoryRepository, ChatRoomRepository chatRoomRepository, MemberRepository memberRepository) {
         this.chatHistoryRepository = chatHistoryRepository;
+        this.chatRoomRepository = chatRoomRepository;
         this.memberRepository = memberRepository;
     }
 
     @GetMapping("/chat-history")
-    public List<ChatHistory> getChatHistory() {
+    public List<ChatRoomResponseDto> getChatHistory() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName(); // 현재 인증된 사용자의 이메일
+        Member memberPrincipal = (Member) authentication.getPrincipal();
+        String email = memberPrincipal.getEmail();
+
+        Member member = memberRepository.findMemberByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Member not found for email: " + email));
+
+        // ChatRoom 엔티티를 ChatRoomDto로 변환하여 반환
+        return chatRoomRepository.findAllByMember(member).stream()
+                .map(chatRoom -> new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getTitle()))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/chat-room/{chatRoomId}/messages")
+    public List<ChatMessageResponseDto> getChatRoomMessages(@PathVariable Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new RuntimeException("Chat room not found for ID: " + chatRoomId));
+
+        return chatHistoryRepository.findByChatRoomOrderByIdAsc(chatRoom).stream()
+                .map(chatHistory -> new ChatMessageResponseDto(chatHistory.getId(), chatHistory.getSender(), chatHistory.getMessage()))
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/new-chat")
+    public ChatRoom createNewChatRoom() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Member memberPrincipal = (Member) authentication.getPrincipal();
+        String email = memberPrincipal.getEmail();
 
         Member member = memberRepository.findMemberByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
-        return chatHistoryRepository.findByMember(member);
+        // 새로운 채팅방 생성
+        ChatRoom newChatRoom = new ChatRoom();
+        newChatRoom.setTitle(UUID.randomUUID().toString()); // 새로운 채팅방의 제목으로 UUID 사용
+        newChatRoom.setMember(member);
+
+        return chatRoomRepository.save(newChatRoom);
     }
 }

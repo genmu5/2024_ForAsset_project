@@ -74,11 +74,21 @@ const WebSocketChat = ({ email, chatRoomId }) => {
     const messagesEndRef = useRef(null); // 메시지 컨테이너 끝을 추적하기 위한 ref
 
     useEffect(() => {
+        setMessages([]); // 새로운 채팅방 선택 시 메시지 초기화
+        console.log(messages)
+
         const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
+
+        // Ensure the token is present
+        if (!token) {
+            console.error('Token is not available');
+            return;
+        }
+
         const stompClient = new Client({
             webSocketFactory: () => new SockJS('http://localhost:8080/ws'), // '/ws' 경로로 연결
             connectHeaders: {
-                Authorization: `Bearer ${token}`, // 인증 헤더
+                Authorization: `Bearer ${token}`, // 인증 헤더에 토큰 추가
             },
             debug: (str) => console.log(str), // 디버그 출력
             reconnectDelay: 5000, // 재연결 지연 시간 (밀리초)
@@ -91,9 +101,8 @@ const WebSocketChat = ({ email, chatRoomId }) => {
                     const newMessage = JSON.parse(messageOutput.body); // 수신된 메시지 파싱
                     setMessages(prevMessages => {
                         const updatedMessages = [...prevMessages, newMessage];
-                        // ID를 기준으로 메시지를 정렬
-                        updatedMessages.sort((a, b) => a.id - b.id);
-                        return updatedMessages;
+                        // 모든 메시지를 받은 후 정렬
+                        return updatedMessages.sort((a, b) => a.id - b.id);
                     });
                 });
 
@@ -133,7 +142,10 @@ const WebSocketChat = ({ email, chatRoomId }) => {
             // 메시지를 WebSocket 서버로 전송
             client.publish({
                 destination: `/pub/message`,
-                body: JSON.stringify(userMessage)
+                body: JSON.stringify(userMessage),
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // 여기에도 토큰 포함
+                }
             });
 
             setMessage(''); // 메시지 입력 필드 비우기
@@ -152,8 +164,8 @@ const WebSocketChat = ({ email, chatRoomId }) => {
         <Container>
             <MessagesContainer>
                 {messages.map((msg, index) => (
-                    <MessageWrapper key={index} isUser={msg.sender === email}>
-                        <MessageContent isUser={msg.sender === email}>
+                    <MessageWrapper key={index} isUser={msg.sender === email || msg.sender !== 'ChatGPT'}>
+                        <MessageContent isUser={msg.sender === email || msg.sender !== 'ChatGPT'}>
                             {msg.data}
                         </MessageContent>
                     </MessageWrapper>
