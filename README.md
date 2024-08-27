@@ -12,10 +12,12 @@
 - [개인] 개인의 자산운용을 위한 실시간 인기 펀드 및 경제 소식 제공
 
 ## 아키텍처
-![Alt text](Architecture.png)
+![image](https://github.com/user-attachments/assets/6b3ae6ab-0b3a-4573-8272-6e2221558f11)
 
 ## 사용 툴
-- Chat GPT 3.5 API
+- Chat GPT 4o API
+- Kobart Model
+- M2M-100 Model
 - Spring Boot Framework
 - React
 - AWS EC2 Server
