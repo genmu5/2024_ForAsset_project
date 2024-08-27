@@ -8,7 +8,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     background-color: white;
-    height: 100%;  // 부모 요소의 전체 높이를 차지
+    height: calc(100% - 50px);  
     width: 100%;
 `;
 
@@ -42,7 +42,7 @@ const MessageContent = styled.div`
 const InputContainer = styled.div`
     display: flex;
     gap: 10px;
-    padding: 10px 0;  // 입력창을 약간 위로 띄우기 위한 여백 추가
+    padding: 10px 0; 
 `;
 
 const Input = styled.input`

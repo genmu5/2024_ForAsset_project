@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,10 +54,22 @@ public class ChatHistoryController {
                 .collect(Collectors.toList());
     }
 
+    @PutMapping("/chat-room/{chatRoomId}/title")
+    public ChatRoomResponseDto updateChatRoomTitle(@PathVariable Long chatRoomId, @RequestBody String newTitle) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new RuntimeException("Chat room not found for ID: " + chatRoomId));
+
+        chatRoom.setTitle(newTitle);
+        chatRoomRepository.save(chatRoom);
+
+        return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getTitle());
+    }
+
     @PostMapping("/new-chat")
     public ChatRoom createNewChatRoom() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member memberPrincipal = (Member) authentication.getPrincipal();
+        System.out.println(memberPrincipal.getEmail());
         String email = memberPrincipal.getEmail();
 
         Member member = memberRepository.findMemberByEmail(email)
@@ -66,7 +77,7 @@ public class ChatHistoryController {
 
         // 새로운 채팅방 생성
         ChatRoom newChatRoom = new ChatRoom();
-        newChatRoom.setTitle(UUID.randomUUID().toString()); // 새로운 채팅방의 제목으로 UUID 사용
+        newChatRoom.setTitle("New Chat");
         newChatRoom.setMember(member);
 
         return chatRoomRepository.save(newChatRoom);
