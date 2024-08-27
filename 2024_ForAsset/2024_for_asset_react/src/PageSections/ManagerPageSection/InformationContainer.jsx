@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -24,7 +24,7 @@ const TitleInput = styled.input`
     text-align: center;
 `;
 
-const FundInput = styled.input`
+const FundInput = styled.select`
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -33,7 +33,7 @@ const FundInput = styled.input`
     font-size: 16px;
 `;
 
-const PeriodInput = styled.input`
+const PeriodInput = styled.select`
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -121,33 +121,46 @@ const StyledResultItem = styled.div`
     }
 `;
 
-const InformationContainer = ({ title, onTitleChange, fundName, setFundName, period, setPeriod, keyword, setKeyword, onComplete }) => {
-    const [newsSummaries, setNewsSummaries] = useState([]);  // 전체 뉴스 리스트 상태
-    const [selectedNewsIndices, setSelectedNewsIndices] = useState([]); // 선택된 뉴스 인덱스 상태 추가
-    const [planMessage, setPlanMessage] = useState(""); // 운용 계획 메시지 상태 추가
-    const [resultMessage, setResultMessage] = useState(""); // 운용 결과 메시지 상태 추가
+const InformationContainer = ({ title, onTitleChange, onComplete }) => {
+    const [fundName, setFundName] = useState('');
+    const [period, setPeriod] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [newsSummaries, setNewsSummaries] = useState([]);
+    const [selectedNewsIndices, setSelectedNewsIndices] = useState([]);
+    const [planMessage, setPlanMessage] = useState("");
+    const [resultMessage, setResultMessage] = useState("");
+    const [availableFunds, setAvailableFunds] = useState([]);
+    const [availablePeriods, setAvailablePeriods] = useState([]);
+
+    useEffect(() => {
+        // 펀드 이름 데이터를 가져오는 API 호출
+        fetch('/funds/names')
+            .then(response => response.json())
+            .then(data => setAvailableFunds(data))
+            .catch(error => console.error('펀드 이름 목록 가져오기 중 오류:', error));
+    }, []);
+
+    useEffect(() => {
+        // 펀드 이름이 선택되었을 때 해당 펀드의 운용 기간을 가져옴
+        if (fundName) {
+            fetch(`/funds/periods?fundName=${encodeURIComponent(fundName)}`)
+                .then(response => response.json())
+                .then(data => setAvailablePeriods(data))
+                .catch(error => console.error('운용 기간 목록 가져오기 중 오류:', error));
+        } else {
+            setAvailablePeriods([]); // 펀드 이름이 선택되지 않으면 운용 기간 목록 초기화
+        }
+    }, [fundName]);
 
     const handleCompleteClick = () => {
-        // 기간을 '-' 형식으로 변환
-        const [startDate, endDate] = period.split("~").map(date => {
-            return date.trim().replace(/\./g, '-'); // '.'을 '-'로 변환
-        });
+        const [startDate, endDate] = period.split("~").map(date => date.trim().replace(/\./g, '-'));
 
         fetch(`/news-summaries?keyword=${encodeURIComponent(keyword)}&startDate=${encodeURIComponent(startDate)}T00:00:00&endDate=${encodeURIComponent(endDate)}T23:59:59`, {
             method: 'GET',
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(newsData => {
-                setNewsSummaries(newsData); // 뉴스 데이터 설정
-            })
-            .catch(error => {
-                console.error('뉴스 요약 가져오기 중 오류:', error);
-            });
+            .then(response => response.json())
+            .then(newsData => setNewsSummaries(newsData))
+            .catch(error => console.error('뉴스 요약 가져오기 중 오류:', error));
     };
 
     const handleNewsItemClick = (index) => {
@@ -167,7 +180,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             newsSummaries: selectedSummaries.map(summary => summary.summary),
         };
 
-        fetch('http://localhost:8080/funds/generate-plan', {
+        fetch('/funds/generate-plan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -175,9 +188,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             body: JSON.stringify(requestData),
         })
             .then(response => response.text())
-            .then(planDetails => {
-                setPlanMessage(planDetails);
-            })
+            .then(planDetails => setPlanMessage(planDetails))
             .catch(error => {
                 console.error('운용 계획 생성 중 오류:', error);
                 setPlanMessage("운용 계획 생성 중 오류가 발생했습니다.");
@@ -193,7 +204,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             newsSummaries: selectedSummaries.map(summary => summary.summary),
         };
 
-        fetch('http://localhost:8080/funds/generate-results', {
+        fetch('/funds/generate-results', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -201,9 +212,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             body: JSON.stringify(requestData),
         })
             .then(response => response.text())
-            .then(results => {
-                setResultMessage(results);
-            })
+            .then(results => setResultMessage(results))
             .catch(error => {
                 console.error('운용 결과 생성 중 오류:', error);
                 setResultMessage("운용 결과 생성 중 오류가 발생했습니다.");
@@ -226,18 +235,18 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
                 value={title}
                 onChange={(e) => onTitleChange(e.target.value)}
             />
-            <FundInput
-                type="text"
-                placeholder="펀드명"
-                value={fundName}
-                onChange={(e) => setFundName(e.target.value)}
-            />
-            <PeriodInput
-                type="text"
-                placeholder="펀드 운용 기간 (예: 2024.03.01~2024.03.09)"
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-            />
+            <FundInput value={fundName} onChange={(e) => setFundName(e.target.value)}>
+                <option value="">펀드 선택</option>
+                {availableFunds.map((fundName, index) => (
+                    <option key={index} value={fundName}>{fundName}</option>
+                ))}
+            </FundInput>
+            <PeriodInput value={period} onChange={(e) => setPeriod(e.target.value)}>
+                <option value="">운용 기간 선택</option>
+                {availablePeriods.map((period, index) => (
+                    <option key={index} value={period}>{period}</option>
+                ))}
+            </PeriodInput>
             <KeywordInput
                 type="text"
                 placeholder="키워드"
@@ -255,7 +264,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
                             onClick={() => handleNewsItemClick(index)}
                         >
                             <h3>{summary.title}</h3>
-                            <p style={{lineHeight: "1.2"}}>{summary.summary}</p>
+                            <p style={{ lineHeight: "1.2" }}>{summary.summary}</p>
                             <small>{summary.publishedAt}</small>
                         </NewsItem>
                     ))}
@@ -266,7 +275,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             {planMessage && (
                 <StyledResultItem>
                     <h3>운용 계획</h3>
-                    <p style={{lineHeight: "1.2"}}>{planMessage}</p>
+                    <p style={{ lineHeight: "1.2" }}>{planMessage}</p>
                 </StyledResultItem>
             )}
 
@@ -274,7 +283,7 @@ const InformationContainer = ({ title, onTitleChange, fundName, setFundName, per
             {resultMessage && (
                 <StyledResultItem>
                     <h3>운용 결과</h3>
-                    <p style={{lineHeight: "1.2"}}>{resultMessage}</p>
+                    <p style={{ lineHeight: "1.2" }}>{resultMessage}</p>
                 </StyledResultItem>
             )}
 
