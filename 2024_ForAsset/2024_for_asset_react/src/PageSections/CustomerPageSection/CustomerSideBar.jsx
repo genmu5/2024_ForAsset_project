@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import more_icon from "../../images/more_icon.png";
-import DeleteConfirmationModal from "./CustomerDeleteConfirmationModal";
+import CustomerDeleteConfirmationModal from "./CustomerDeleteConfirmationModal";  // 모달 컴포넌트 임포트
 
 const Container = styled.div`
     display: flex;
@@ -105,7 +105,7 @@ const MoreIcon = styled(Icon)`
     margin-left: auto;
 `;
 
-const CustomerSideBar = ({ chatData, onSelectChat, onNewChat, selectedChatId }) => {
+const CustomerSideBar = ({ chatData, onSelectChat, onNewChat, selectedChatId, setChatData }) => {
     const [menuOpenIndex, setMenuOpenIndex] = useState(null);
     const [showModal, setShowModal] = useState(false); // 모달 창 표시 여부 상태
     const [chatToDelete, setChatToDelete] = useState(null); // 삭제할 채팅 저장
@@ -121,10 +121,27 @@ const CustomerSideBar = ({ chatData, onSelectChat, onNewChat, selectedChatId }) 
         setMenuOpenIndex(null); // 메뉴 닫기
     };
 
-    const handleConfirmDelete = () => {
-        console.log(`Chat with ID ${chatToDelete} will be deleted.`);
+    const handleConfirmDelete = async () => {
+        const token = localStorage.getItem('token'); // 토큰 가져오기
+        try {
+            const response = await fetch(`/api/chat-room/${chatToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: token,
+                },
+            });
+
+            if (response.ok) {
+                console.log(`Chat with ID ${chatToDelete} deleted successfully.`);
+                setChatData(chatData.filter(chat => chat.id !== chatToDelete)); // 삭제된 항목을 로컬 상태에서 제거
+            } else {
+                console.error("Failed to delete chat");
+            }
+        } catch (error) {
+            console.error("Error deleting chat:", error);
+        }
+
         setShowModal(false); // 모달 창 닫기
-        // 여기에 실제 삭제 로직을 추가할 수 있습니다.
     };
 
     const handleCancelDelete = () => {
@@ -167,7 +184,7 @@ const CustomerSideBar = ({ chatData, onSelectChat, onNewChat, selectedChatId }) 
                 ))}
             </ChatList>
             {showModal && (
-                <DeleteConfirmationModal
+                <CustomerDeleteConfirmationModal
                     onConfirm={handleConfirmDelete}
                     onCancel={handleCancelDelete}
                 />

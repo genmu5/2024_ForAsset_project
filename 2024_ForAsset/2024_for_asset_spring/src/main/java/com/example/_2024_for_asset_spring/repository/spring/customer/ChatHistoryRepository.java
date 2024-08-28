@@ -13,4 +13,5 @@ import java.util.List;
 @Primary
 public interface ChatHistoryRepository extends JpaRepository<ChatHistory, Long> {
     List<ChatHistory> findByChatRoomOrderByIdAsc(ChatRoom chatRoom);
+    void deleteAllByChatRoom(ChatRoom chatRoom);
 }

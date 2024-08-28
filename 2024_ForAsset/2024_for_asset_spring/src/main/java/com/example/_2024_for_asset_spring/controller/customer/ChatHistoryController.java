@@ -8,8 +8,10 @@ import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
 import com.example._2024_for_asset_spring.repository.spring.customer.ChatHistoryRepository;
 import com.example._2024_for_asset_spring.repository.spring.customer.ChatRoomRepository;
 import com.example._2024_for_asset_spring.repository.spring.auth.MemberRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,6 +65,17 @@ public class ChatHistoryController {
         chatRoomRepository.save(chatRoom);
 
         return new ChatRoomResponseDto(chatRoom.getId(), chatRoom.getTitle());
+    }
+
+    @DeleteMapping("/chat-room/{chatRoomId}")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteChatRoom(@PathVariable Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new RuntimeException("Chat room not found for ID: " + chatRoomId));
+
+        chatHistoryRepository.deleteAllByChatRoom(chatRoom);
+        chatRoomRepository.delete(chatRoom);
     }
 
     @PostMapping("/new-chat")

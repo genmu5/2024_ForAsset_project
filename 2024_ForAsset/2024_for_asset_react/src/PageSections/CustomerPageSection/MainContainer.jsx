@@ -188,6 +188,7 @@ const MainContainer = () => {
             <InnerContainer>
                 <CustomerSideBar
                     chatData={chatData}
+                    setChatData={setChatData}
                     onSelectChat={handleSelectChat}
                     onNewChat={handleNewChat}
                     selectedChatId={selectedChat ? selectedChat.id : null}
