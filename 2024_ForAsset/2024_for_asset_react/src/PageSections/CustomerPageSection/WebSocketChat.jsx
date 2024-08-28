@@ -30,7 +30,7 @@ const MessageWrapper = styled.div`
 `;
 
 const MessageContent = styled.div`
-    background-color: ${props => props.isUser ? 'rgba(44,71,146,0.17)' : '#f4f4f4'};
+    background-color: ${props => props.isUser ? 'rgba(44,71,146,0.17)' : '#eeeeee'};
     border-radius: 10px;
     padding: 10px;
     max-width: 60%;

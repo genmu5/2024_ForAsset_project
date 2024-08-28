@@ -81,7 +81,7 @@ const MainContainer = () => {
         };
 
         fetchChatHistory();
-    }, [authContext.isAuthenticated]);
+    }, [authContext.isAuthenticated, chatData, selectedChat]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -147,7 +147,6 @@ const MainContainer = () => {
             const newChatRoom = await response.json();
 
             setChatData([...chatData, newChatRoom]);
-            setSelectedChat(newChatRoom);
 
             try {
                 const messageResponse = await fetch(`/api/chat-room/${newChatRoom.id}/messages`, {
@@ -158,6 +157,7 @@ const MainContainer = () => {
                 });
                 const messageData = await messageResponse.json();
                 setMessages(messageData);
+                setSelectedChat(newChatRoom);
             } catch (messageError) {
                 console.error("Failed to fetch chat messages:", messageError);
             }
@@ -168,17 +168,31 @@ const MainContainer = () => {
     };
 
     const handleTitleChange = async (chatRoomId, newTitle) => {
-        if (client) {
+        const token = localStorage.getItem('token');
 
-            setChatData(prevChatData =>
-                prevChatData.map(chat =>
-                    chat.id === chatRoomId ? { ...chat, title: newTitle } : chat
-                )
-            );
+        try {
+            const response = await fetch(`/api/chat-room/${chatRoomId}/title`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: token
+                },
+                body: newTitle
+            });
 
-            if (selectedChat && selectedChat.id === chatRoomId) {
-                setSelectedChat({ ...selectedChat, title: newTitle });
+            if (response.ok) {
+                console.log('Title updated successfully.');
+                // 성공적으로 업데이트된 경우, 로컬 상태를 업데이트
+                setChatData(prevChatData =>
+                    prevChatData.map(chat =>
+                        chat.id === chatRoomId ? { ...chat, title: newTitle } : chat
+                    )
+                );
+            } else {
+                console.error('Failed to update title.');
             }
+        } catch (error) {
+            console.error('Error updating title:', error);
         }
     };
 
