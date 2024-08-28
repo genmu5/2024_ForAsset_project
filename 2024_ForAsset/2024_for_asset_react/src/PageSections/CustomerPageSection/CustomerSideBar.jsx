@@ -8,9 +8,7 @@ const Container = styled.div`
     flex-direction: column;
     width: 300px;
     height: 100%;
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #F9FAFF;
     padding: 20px;
 `;
 
@@ -80,7 +78,8 @@ const NewChatButton = styled.button`
     align-items: center;
     width: 100%;
     height: 45px;
-    background-color: #4A4A4A;
+    //background-color: #4A4A4A;
+    background-color: rgba(83, 113, 248, 0.5);
     color: white;
     border: none;
     border-radius: 10px;

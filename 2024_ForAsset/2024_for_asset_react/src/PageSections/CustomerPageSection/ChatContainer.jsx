@@ -6,15 +6,18 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding-right: 10px;
+    background-color: #F9FAFF;
 `;
 
 const TitleInput = styled.input`
+    height: 24px;
     font-size: 18px;
     padding: 5px;
-    margin: 10px;
+    margin: 20px 0 10px 0;
     background: white;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px;
     text-align: center;
     &:focus {
         outline: none;

@@ -8,7 +8,7 @@ const Container = styled.div`
     display: flex;
     flex: 1;
     flex-direction: column;
-    background-color: white;
+    background-color: #F9FAFF;
     gap: 30px;
     padding: 20px;
 `;
@@ -17,7 +17,8 @@ const InfoSection = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #f5f5f5;
+    background-color: white;
+    border: 1px solid #ddd;
     border-radius: 10px;
     padding: 10px;
 `;

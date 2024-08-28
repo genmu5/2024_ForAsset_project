@@ -8,15 +8,16 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     background-color: white;
-    height: calc(100% - 50px);  
+    height: calc(100% - 70px);  
     width: 100%;
+    background-color: #F9FAFF;
 `;
 
 const MessagesContainer = styled.div`
     flex-grow: 1;  // 나머지 공간을 모두 차지하도록 설정
     border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    border-radius: 13px;
+    background-color: white;
+    border-radius: 10px;
     padding: 10px;
     overflow-y: auto;  // 메시지 영역에만 스크롤 활성화
 `;
@@ -29,7 +30,7 @@ const MessageWrapper = styled.div`
 `;
 
 const MessageContent = styled.div`
-    background-color: ${props => props.isUser ? 'rgba(44,71,146,0.17)' : '#ffffff'};
+    background-color: ${props => props.isUser ? 'rgba(44,71,146,0.17)' : '#f4f4f4'};
     border-radius: 10px;
     padding: 10px;
     max-width: 60%;
@@ -42,7 +43,7 @@ const MessageContent = styled.div`
 const InputContainer = styled.div`
     display: flex;
     gap: 10px;
-    padding: 10px 0; 
+    padding: 10px 0;
 `;
 
 const Input = styled.input`

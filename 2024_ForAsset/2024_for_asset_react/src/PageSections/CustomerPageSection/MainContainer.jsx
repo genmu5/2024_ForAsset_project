@@ -14,13 +14,13 @@ const Container = styled.div`
     flex-direction: column;
     background-color: #F5F5F5;
     overflow: hidden;
+    background-color: #F9FAFF;
 `;
 
 const InnerContainer = styled.div`
     display: flex;
     flex: 1;
     width: 100%;
-    background-color: #FFFFFF;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -202,7 +202,7 @@ const MainContainer = () => {
                                 onTitleChange={handleTitleChange}
                             />
                         ) : (
-                            <div style={{display: "flex", height: "100%", width: "100%", alignItems: "center", justifyContent: "center"}}>
+                            <div style={{display: "flex", height: "100%", width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "#F9FAFF"}}>
                                 채팅 내역을 선택하거나, 새로운 채팅을 시작하세요.
                             </div>
                         )}
