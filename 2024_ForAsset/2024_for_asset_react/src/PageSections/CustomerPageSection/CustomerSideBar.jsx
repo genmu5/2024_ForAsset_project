@@ -86,18 +86,18 @@ const NewChatButton = styled.button`
     border-radius: 10px;
     cursor: pointer;
     &:hover {
-        transform: scale(1.01); // Scale on hover
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Shadow on hover
+        transform: scale(1.01); 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     }
 `;
 
 const Icon = styled.img`
     width: 23px;
     height: 23px;
-    cursor: pointer; // Change cursor to pointer
+    cursor: pointer;
     &:hover {
-        transform: scale(1.01); // Scale on hover
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Shadow on hover
+        transform: scale(1.01); 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     }
 `;
 
@@ -109,6 +109,7 @@ const CustomerSideBar = ({ chatData, onSelectChat, onNewChat, selectedChatId, se
     const [menuOpenIndex, setMenuOpenIndex] = useState(null);
     const [showModal, setShowModal] = useState(false); // 모달 창 표시 여부 상태
     const [chatToDelete, setChatToDelete] = useState(null); // 삭제할 채팅 저장
+    const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태 추가
 
     const toggleMenu = (e, index) => {
         e.stopPropagation();
@@ -148,21 +149,29 @@ const CustomerSideBar = ({ chatData, onSelectChat, onNewChat, selectedChatId, se
         setShowModal(false); // 모달 창 닫기
     };
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value); // 검색어 상태 업데이트
+    };
+
+    const filteredChats = chatData.filter(chat =>
+        chat.title.toLowerCase().includes(searchQuery.toLowerCase()) // 검색어로 필터링
+    );
+
     return (
         <Container>
             <div>
                 <SearchInput
                     type="text"
                     placeholder="Search..."
-                    //value={searchQuery}
-                    //onChange={handleSearchChange}
+                    value={searchQuery}
+                    onChange={handleSearchChange} // 검색어 입력 핸들러 추가
                 />
                 <NewChatButton onClick={onNewChat}>
                     <p style={{fontSize: 18, textAlign: "left", color: "#fff"}}>+ New Chat</p>
                 </NewChatButton>
             </div>
             <ChatList>
-                {chatData.map((chat, index) => (
+                {filteredChats.map((chat, index) => (
                     <ChatListContainer key={chat.id}>
                         <ChatItem
                             onClick={() => onSelectChat(chat)}
