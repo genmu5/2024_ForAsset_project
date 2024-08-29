@@ -255,15 +255,15 @@ const LoginPage = () => {
             </TextWrapper>
             <LoginIconWrapper>
                 <Icon src={KakaoIcon}/>
-                <span style={{fontFamily: 'noto', width: '150px'}} onClick={handleKakaoLogin}>카카오로 회원가입</span>
+                <span style={{fontFamily: 'noto', width: '100px'}} onClick={handleKakaoLogin}>카카오로 로그인</span>
             </LoginIconWrapper>
             <LoginIconWrapper>
                 <Icon src={NaverIcon}/>
-                <span style={{fontFamily: 'noto', width: '150px'}}>네이버로 회원가입</span>
+                <span style={{fontFamily: 'noto', width: '100px'}}>네이버로 로그인</span>
             </LoginIconWrapper>
             <LoginIconWrapper>
                 <Icon src={GoogleIcon}/>
-                <span style={{fontFamily: 'noto', width: '150px'}}>구글로 회원가입</span>
+                <span style={{fontFamily: 'noto', width: '100px'}}>구글로 로그인</span>
             </LoginIconWrapper>
         </Container>
     );

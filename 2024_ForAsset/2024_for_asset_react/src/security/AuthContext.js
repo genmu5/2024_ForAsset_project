@@ -47,10 +47,15 @@ const AuthProvider = ({children}) => {
     }
 
     function logout() {
-        setAuthenticated(false);
-        setToken(null);
+        console.log("Attempting to logout");
+
+        // 쿠키와 로컬 스토리지 제거
+        document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem("token");
-        localStorage.removeItem("memberEmail");
+
+        // 카카오 로그아웃 URL로 리디렉션
+        const kakaoLogoutUrl = `https://kauth.kakao.com/oauth/logout?client_id=af58e87d3ba72c33283e46a7a8fa2983&logout_redirect_uri=http://localhost:3000`;
+        window.location.href = kakaoLogoutUrl;
     }
 
     return (

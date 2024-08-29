@@ -6,6 +6,7 @@ import InformationContainer from "../ManagerPageSection/InformationContainer";
 import ReportTemplate from "./ReportTemplate";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import logo from '../../images/logo.png';
+import HeaderComponent from "../../components/HeaderComponent";
 
 const Container = styled.div`
     width: 100vw;
@@ -229,14 +230,7 @@ const MainContainer = () => {
 
     return (
         <Container>
-            <Header>
-                <Logo src={logo} alt="Logo" />
-                <HeaderRight>
-                    <UserProfile />
-                    <Button>로그아웃</Button>
-                    <Button>도움말</Button>
-                </HeaderRight>
-            </Header>
+            <HeaderComponent />
             <InnerContainer>
                 <SideBarContainer
                     mainTitle={"ForAssetManager"}

@@ -1,46 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import SideBarContainer from "../../components/SideBarContainer";
-import UserProfile from "../../components/UserProfile";
-import logo from '../../images/logo.png';
-import InformationContainer from "./InformationContainer";
+import HeaderComponent from "../../components/HeaderComponent";
+import CustomerSideBar from "./CustomerSideBar";
 import ChatContainer from "./ChatContainer";
-import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
+import InformationContainer from "./InformationContainer";
+import { useAuth } from "../../security/AuthContext";
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
 
 const Container = styled.div`
     height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: #F5F5F5;
-    overflow: hidden; /* 스크롤 방지 */
-`;
-
-const Header = styled.div`
-    display: flex;
-    border-bottom: solid 1px #A5A5A5;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #FFF;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const Logo = styled.img`
-    height: 40px;
-    margin-left: 20px; /* 로고를 오른쪽으로 이동하기 위한 여백 */
-`;
-
-const HeaderRight = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
-const Button = styled.button`
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    margin-left: 10px;
+    overflow: hidden;
+    background-color: #F9FAFF;
 `;
 
 const InnerContainer = styled.div`
@@ -68,9 +42,8 @@ const SectionContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #F5F5F5;
-    overflow-y: auto; /* 수직 스크롤 활성화 */
-    overflow-x: hidden; /* 수평 스크롤 비활성화 */
+    height: 100%;
+    overflow-y: auto;
 `;
 
 const VerticalDivider = styled.div`
@@ -80,143 +53,184 @@ const VerticalDivider = styled.div`
 `;
 
 const MainContainer = () => {
-    const [chatData, setChatData] = useState([]);
-    const [selectedIndex, setSelectedIndex] = useState(0);
-    const [reportData, setReportData] = useState(null);
-    const [message, setMessage] = useState("");
-    const [keyword, setKeyword] = useState(""); // 키워드 상태 추가
-    const [showModal, setShowModal] = useState(false);
-    const [indexToRemove, setIndexToRemove] = useState(null);
+    const authContext = useAuth();
+
+    const [chatData, setChatData] = useState([]); // 초기 상태를 빈 배열로 설정
+    const [selectedChat, setSelectedChat] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [client, setClient] = useState(null);
 
     useEffect(() => {
-        // 초기 데이터를 JSON 파일에서 로드
-        fetch('/api/chats')
-            .then(response => response.json())
-            .then(data => setChatData(Array.isArray(data) ? data : []))
-            .catch(error => console.error('데이터 로드 중 오류:', error));
+        const fetchChatHistory = async () => {
+            const token = localStorage.getItem("token");
+            try {
+                const response = await fetch('/api/chat-history', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: token
+                    }
+                });
+                const data = await response.json();
+
+                if (Array.isArray(data)) {  // 데이터를 배열로 받았는지 확인
+                    setChatData(data);
+                } else {
+                    console.error("Unexpected data format:", data);
+                    setChatData([]); // 데이터가 배열이 아닐 경우 빈 배열로 설정
+                }
+            } catch (error) {
+                console.error("Failed to fetch chat history:", error);
+                setChatData([]); // 에러 발생 시 빈 배열로 설정
+            }
+        };
+
+        fetchChatHistory();
+    }, [authContext.isAuthenticated, chatData, selectedChat]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const stompClient = new Client({
+            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            connectHeaders: {
+                Authorization: `Bearer ${token}`,
+            },
+            debug: (str) => console.log(str),
+            reconnectDelay: 5000,
+            onConnect: () => {
+                console.log('Connected');
+                setClient(stompClient);
+            },
+            onDisconnect: () => {
+                console.log('Disconnected');
+            },
+            onStompError: (frame) => {
+                console.error('Broker reported error: ' + frame.headers['message']);
+                console.error('Additional details: ' + frame.body);
+            },
+        });
+
+        stompClient.activate();
+
+        return () => {
+            if (stompClient) {
+                stompClient.deactivate();
+            }
+        };
     }, []);
 
-    const saveData = (data) => {
-        // 데이터를 서버에 있는 JSON 파일로 저장
-        fetch('/api/chats', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.error('데이터 저장 중 오류:', error));
-    };
+    const handleSelectChat = async (chat) => {
+        setSelectedChat(chat);
+        setMessages([]);
 
-    const handleItemClick = (index) => {
-        setSelectedIndex(index);
-        setMessage("");
-        const selectedChat = chatData[index];
-        setReportData(null);
-        if (selectedChat.fundName && selectedChat.period) {
-            fetch(`/api/fund-report?fundName=${encodeURIComponent(selectedChat.fundName)}&operationPeriod=${encodeURIComponent(selectedChat.period)}`)
-                .then(response => response.json())
-                .then(data => setReportData(data))
-                .catch(error => console.error('리포트 데이터 로드 중 오류:', error));
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch(`/api/chat-room/${chat.id}/messages`, {
+                method: 'GET',
+                headers: {
+                    Authorization: token
+                }
+            });
+            const data = await response.json();
+            setMessages(data);
+        } catch (error) {
+            console.error("Failed to fetch chat messages:", error);
         }
     };
 
-    const handleNewChatClick = () => {
-        const newChat = {
-            title: "New Report",
-            fundName: "",
-            period: "",
-            messages: [],
-            report: ""
-        };
-        const updatedChatData = [newChat, ...chatData];
-        setChatData(updatedChatData);
-        setSelectedIndex(0);
-        saveData(updatedChatData);
+    const handleNewChat = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch('/api/new-chat', {
+                method: 'POST',
+                headers: {
+                    Authorization: token
+                }
+            });
+
+            const newChatRoom = await response.json();
+
+            setChatData([...chatData, newChatRoom]);
+
+            try {
+                const messageResponse = await fetch(`/api/chat-room/${newChatRoom.id}/messages`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: token
+                    }
+                });
+                const messageData = await messageResponse.json();
+                setMessages(messageData);
+                setSelectedChat(newChatRoom);
+            } catch (messageError) {
+                console.error("Failed to fetch chat messages:", messageError);
+            }
+
+        } catch (error) {
+            console.error("Failed to create new chat:", error);
+        }
     };
 
-    const handleRemoveChat = (index) => {
-        const updatedChatData = chatData.filter((_, i) => i !== index);
-        setChatData(updatedChatData);
-        setSelectedIndex(null);
-        saveData(updatedChatData);
-    };
+    const handleTitleChange = async (chatRoomId, newTitle) => {
+        const token = localStorage.getItem('token');
 
-    const handleBookmarkToggle = (index) => {
-        const updatedChatData = [...chatData];
-        updatedChatData[index].bookmarked = !updatedChatData[index].bookmarked;
-        setChatData(updatedChatData);
-        saveData(updatedChatData);
-    };
+        try {
+            const response = await fetch(`/api/chat-room/${chatRoomId}/title`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: token
+                },
+                body: newTitle
+            });
 
-    const showDeleteModal = (index) => {
-        setIndexToRemove(index);
-        setShowModal(true);
-        document.addEventListener('click', handleOutsideClick, true);
-    };
-
-    const confirmRemove = () => {
-        handleRemoveChat(indexToRemove);
-        setShowModal(false);
-        setIndexToRemove(null);
-        document.removeEventListener('click', handleOutsideClick, true);
-    };
-
-    const cancelRemove = () => {
-        setShowModal(false);
-        setIndexToRemove(null);
-        document.removeEventListener('click', handleOutsideClick, true);
-    };
-
-    const handleOutsideClick = (event) => {
-        if (showModal && !event.target.closest('.modal-content')) {
-            cancelRemove();
+            if (response.ok) {
+                console.log('Title updated successfully.');
+                // 성공적으로 업데이트된 경우, 로컬 상태를 업데이트
+                setChatData(prevChatData =>
+                    prevChatData.map(chat =>
+                        chat.id === chatRoomId ? { ...chat, title: newTitle } : chat
+                    )
+                );
+            } else {
+                console.error('Failed to update title.');
+            }
+        } catch (error) {
+            console.error('Error updating title:', error);
         }
     };
 
     return (
-        <Container onClick={() => {
-            if (showModal) {
-                cancelRemove();
-            }
-        }}>
-            <Header>
-                <Logo src={logo} alt="Logo" />
-                <HeaderRight>
-                    <UserProfile />
-                    <Button>로그아웃</Button>
-                    <Button>도움말</Button>
-                </HeaderRight>
-            </Header>
+        <Container>
+            <HeaderComponent />
             <InnerContainer>
-                <SideBarContainer
-                    mainTitle={"ForAssetManager"}
-                    ButtonBackGroundColor={"#4A4A4A"}
+                <CustomerSideBar
                     chatData={chatData}
-                    onNewChatClick={handleNewChatClick}
-                    onItemClick={handleItemClick}
-                    onRemoveChat={showDeleteModal}
-                    onBookmarkToggle={handleBookmarkToggle}
-                    selectedIndex={selectedIndex}
+                    setChatData={setChatData}
+                    onSelectChat={handleSelectChat}
+                    onNewChat={handleNewChat}
+                    selectedChatId={selectedChat ? selectedChat.id : null}
                 />
                 <MainContent>
                     <SectionContainer>
-                        <ChatContainer/>
+                        {selectedChat ? (
+                            <ChatContainer
+                                chatRoom={selectedChat}
+                                messages={messages}
+                                onTitleChange={handleTitleChange}
+                            />
+                        ) : (
+                            <div style={{display: "flex", height: "100%", width: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "#F9FAFF"}}>
+                                채팅 내역을 선택하거나, 새로운 채팅을 시작하세요.
+                            </div>
+                        )}
                     </SectionContainer>
                     <VerticalDivider />
                     <SectionContainer>
-                        <InformationContainer/>
+                        <InformationContainer />
                     </SectionContainer>
                 </MainContent>
             </InnerContainer>
-            {showModal && (
-                <DeleteConfirmationModal
-                    onConfirm={confirmRemove}
-                    onCancel={cancelRemove}
-                />
-            )}
         </Container>
     );
 };

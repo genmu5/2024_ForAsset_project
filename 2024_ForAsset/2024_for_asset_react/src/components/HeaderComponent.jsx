@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../logo.svg";
+import logo from "../images/logo.png";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../security/AuthContext";
 
@@ -18,7 +18,9 @@ const Container = styled.div`
 const NavWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 1760px;
+    //width: 1760px;
+    width: 100%;
+    padding: 0 30px;
 `;
 
 const Icon = styled.img`
@@ -84,6 +86,7 @@ const HeaderComponent = () => {
                     <TextWrapper>
                         <p>개인회원</p>
                         <p>기업회원</p>
+                        <p>도움말</p>
                     </TextWrapper>
                     {!authContext.isAuthenticated &&
                         <ButtonWrapper>

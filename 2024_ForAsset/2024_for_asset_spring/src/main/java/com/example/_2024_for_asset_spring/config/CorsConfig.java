@@ -11,7 +11,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000") // 클라이언트에서 접근하는 Origin을 여기에 명시
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
                 .allowedHeaders("*") // 허용할 HTTP 헤더
                 .allowCredentials(true); // 클라이언트가 인증 정보를 포함하도록 허용
     }

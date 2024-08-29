@@ -1,13 +1,23 @@
 package com.example._2024_for_asset_spring.entity.spring.auth;
 
 import com.example._2024_for_asset_spring.dto.auth.request.SignUpRequestDto;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatHistory;
+import com.example._2024_for_asset_spring.entity.spring.chat.ChatRoom;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="member")
 public class Member {
 
@@ -38,27 +48,17 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "oauth2_access_token")
+    private String oauth2AccessToken;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRooms;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public Member() {
-    }
-
-    public Member(Long id, String email, String password, String nickName, Role role, Provider provider, String providerId, String refreshToken, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickName = nickName;
-        this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.refreshToken = refreshToken;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 
     public Member(SignUpRequestDto dto){
         this.email = dto.getEmail();
@@ -73,7 +73,7 @@ public class Member {
     }
 
     //OAuth2
-    public Member(String email, String provider, String providerId){
+    public Member(String email, String provider, String providerId, String oauth2AccessToken){
         this.email = email;
         this.password = "KakaoPassword";
         this.nickName = "KakaoNickName";
@@ -83,5 +83,6 @@ public class Member {
         this.provider = Provider.valueOf(provider);
         this.providerId = providerId;
         this.refreshToken = null;
+        this.oauth2AccessToken = oauth2AccessToken;
     }
 }
